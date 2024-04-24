@@ -1,0 +1,160 @@
+# DELIVERY DELIVERY DELIVERY  DELIVERY  DELIVERY 
+#Use Case 1 (Accept delivery): Pseudo code 
+// Main Program
+Start Program
+    Initialize delivery priority queue
+    While program is running:
+        If order completed by chef and is for delivery:
+            AddToDeliveryQueue(order)
+        If delivery driver requests an order:
+            AssignOrderToDriver(driver)
+    End While
+End Program
+
+// Function to add a completed order to the delivery queue
+Function AddToDeliveryQueue(order)
+    // Determine priority (could be based on order time, delivery distance, etc.)
+    priority = CalculatePriority(order)
+    deliveryPriorityQueue.insertWithPriority(order, priority)
+    Display message "Order added to delivery queue with priority: " + priority
+
+// Function to assign the next order in the delivery queue to a driver
+Function AssignOrderToDriver(driver)
+    If deliveryPriorityQueue is not empty and driver.currentDelivery is None:
+        order = deliveryPriorityQueue.pop() // Removes the highest priority order
+        driver.currentDelivery = order
+        UpdateDriverStatus(driver)
+        Display message "Order assigned to driver: " + driver.name
+    Else:
+        Display message "No orders available or driver already has a delivery"
+
+// Function to update the status of the driver
+Function UpdateDriverStatus(driver)
+    // This could log the time, update location tracking, etc.
+    Log "Driver " + driver.name + " is now delivering order " + driver.currentDelivery.orderID
+    NotifyManagement(driver)
+
+// Function to notify management about the delivery status
+Function NotifyManagement(driver)
+    // Management gets updated about which driver is on which delivery
+    SendNotification "Driver " + driver.name + " has taken order ID " + driver.currentDelivery.orderID + " for delivery."
+
+// Utility function to calculate the priority of an order for delivery
+Function CalculatePriority(order)
+    // Simplified example: priority based on order time and delivery distance
+    priority = order.timeOrdered + order.deliveryDistance
+    Return priority
+
+
+
+
+#Use Case 2 (Accept delivery): Pseudo code 
+# Define the classes for DeliveryPersonnel, Feedback, and Management
+// Main Program
+Start Program
+    Initialize delivery priority queue
+    While program is running:
+        If order completed by chef and is for delivery:
+            AddToDeliveryQueue(order)
+        If delivery driver requests an order:
+            AssignOrderToDriver(driver)
+    End While
+End Program
+
+// Function to add a completed order to the delivery queue
+Function AddToDeliveryQueue(order)
+    // Determine priority (could be based on order time, delivery distance, etc.)
+    priority = CalculatePriority(order)
+    deliveryPriorityQueue.insertWithPriority(order, priority)
+    Display message "Order added to delivery queue with priority: " + priority
+
+// Function to assign the next order in the delivery queue to a driver
+Function AssignOrderToDriver(driver)
+    If deliveryPriorityQueue is not empty and driver.currentDelivery is None:
+        order = deliveryPriorityQueue.pop() // Removes the highest priority order
+        driver.currentDelivery = order
+        UpdateDriverStatus(driver)
+        Display message "Order assigned to driver: " + driver.name
+    Else:
+        Display message "No orders available or driver already has a delivery"
+
+// Function to update the status of the driver
+Function UpdateDriverStatus(driver)
+    // This could log the time, update location tracking, etc.
+    Log "Driver " + driver.name + " is now delivering order " + driver.currentDelivery.orderID
+    NotifyManagement(driver)
+
+// Function to notify management about the delivery status
+Function NotifyManagement(driver)
+    // Management gets updated about which driver is on which delivery
+    SendNotification "Driver " + driver.name + " has taken order ID " + driver.currentDelivery.orderID + " for delivery."
+
+// Utility function to calculate the priority of an order for delivery
+Function CalculatePriority(order)
+    // Simplified example: priority based on order time and delivery distance
+    priority = order.timeOrdered + order.deliveryDistance
+    Return priority
+
+
+
+#Use Case 3 (View delivery ratings): Pseudo code 
+# A class to represent the ratings database where all customer ratings are stored
+// Main Program
+Start Program
+    Show Options:
+        1. View Delivery Ratings
+    Choose option:
+        If option 1:
+            DisplayRatingsStatistics()
+End Program
+
+// Function to display ratings statistics
+Function DisplayRatingsStatistics
+    ratings = FetchRatingsFromDatabase()
+    If ratings is not empty:
+        mean = CalculateMean(ratings)
+        median = CalculateMedian(ratings)
+        mode = CalculateMode(ratings)
+        Display "Mean rating: " + mean
+        Display "Median rating: " + median
+        Display "Mode rating: " + mode
+        DisplayHistogram(ratings)
+    Else:
+        Display "No ratings available."
+
+// Function to fetch ratings from the database
+Function FetchRatingsFromDatabase
+    Connect to Database
+    Fetch all ratings for the driver
+    Close Database Connection
+    Return ratings
+
+// Function to calculate mean of ratings
+Function CalculateMean(ratings)
+    total = Sum of all elements in ratings
+    count = Number of elements in ratings
+    mean = total / count
+    Return mean
+
+// Function to calculate median of ratings
+Function CalculateMedian(ratings)
+    Sort ratings
+    count = Number of elements in ratings
+    If count is odd:
+        median = ratings[count / 2]
+    Else:
+        median = (ratings[(count / 2) - 1] + ratings[count / 2]) / 2
+    Return median
+
+// Function to calculate mode of ratings
+Function CalculateMode(ratings)
+    frequency = Create frequency dictionary from ratings
+    maxFrequency = Maximum value in frequency
+    mode = Key(s) from frequency where value is maxFrequency
+    Return mode
+
+// Function to display a histogram of ratings
+Function DisplayHistogram(ratings)
+    frequency = Create frequency dictionary from ratings
+    For each rating from 1 to 5:
+        Print "Rating " + rating + ": " + frequency[rating] * "*"
