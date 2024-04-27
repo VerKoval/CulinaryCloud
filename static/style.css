@@ -1,0 +1,68 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f2eb; /* Your chosen warmer color */
+}
+
+.centered-content {
+    text-align: center; /* Center the content text */
+}
+
+h1 {
+    font-size: 4em; /* Big title */
+    margin: 0 0 1em 0; /* Adjust spacing to your preference */
+}
+
+.welcome-text {
+    font-size: 2em; /* Subtitle */
+    margin: 0 0 0.5em 0; /* Space before the button */
+}
+
+.view-menu-button {
+    display: inline-block;
+    background-color:#f8f2eb;
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.5em; /* Larger button text */
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.view-menu-button:hover {
+    background-color: #f8f2eb; /* Lighter gray on hover */
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f8f2eb;
+}
+
+.top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensures that the login is above other elements */
+}
+
+.login-button {
+    display: inline-block;
+    background-color: #f8f2eb; /* This should be a contrasting color */
+    color: #333; /* Text color that stands out against the button background */
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em; /* Smaller font size as you requested */
+    transition: background-color 0.3s ease;
+    border: 1px solid #333; /* Adding a border to make the button more visible */
+}
+
