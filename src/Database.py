@@ -54,21 +54,31 @@ class Database:
     database = create_database(connection, 'CulinaryCloud')
     connection = create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud')
 
-    def execute_query(self, query):
+    def execute_query(self, query, returnFlag=False):
 
         """
         Function that broadly executes query
+        Specify returnFlag to be True if you want to return a value from SQL
         """
 
-        cursor = Database.connection.cursor()
+        cursor = Database.connection.cursor(buffered=True)
         try:
             cursor.execute(query)
             Database.connection.commit()
             print("Query successful")
+
+            if returnFlag == True:
+                myresult = cursor.fetchall()
+                return myresult
+        
         except Error as err:
             print(f"Error: '{err}'")
 
 class Inventory (Database):
+
+    def __init__ (self):
+
+        self.createTable()
 
     def createTable (self):
 
@@ -87,15 +97,64 @@ class Inventory (Database):
         
         self.execute_query(CreateTableInventoryString)
 
-# Test running code 
 
-A = Inventory()
-A.createTable()
-print(A.connection)
+    def addIngredient (self, ingredientName, foodType, quantityToAdd, expirationDate):
 
-B = Inventory()
-print(B.connection)
+        """
+        Function that adds an ingredient into the Inventory database
+        """
 
-# Deletes database at the end
-delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
+        # Query that tests whether a value is present in a database or not
+        ingredientIsPresentString = f"""
+            SELECT COUNT(1) 
+            FROM Inventory
+            WHERE name = '{ingredientName}';
+            """
+        
+        ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
+
+        # If ingredient is present (value is False/0), then just update count
+        if ingredientIsPresent[0][0] != 0:
+            updateIngredientString = f"""
+                                    UPDATE Inventory
+                                    SET stockQuantity = stockQuantity + {quantityToAdd}
+                                    WHERE name = '{ingredientName}';
+                                    """
+            
+            self.execute_query(updateIngredientString)
+        
+        # If ingredient is not present, add new ingredient in
+        else:
+            insertIngredientString = f"INSERT INTO Inventory VALUES ('{ingredientName}', '{foodType}', {quantityToAdd}, '{expirationDate}');"
+            self.execute_query(insertIngredientString)
+
+        ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
+        print(f'Test 2: {ingredientIsPresent[0][0]}')
+
+    def printTable (self):
+
+        cursor = Database.connection.cursor(buffered=True)
+        cursor.execute("SELECT * FROM Inventory") 
+
+        # fetch all the matching rows 
+        result = cursor.fetchall() 
+  
+        # loop through the rows 
+        for row in result: 
+            print(row, '\n') 
+
+# # Test running code 
+
+# A = Inventory()
+# A.createTable()
+
+# A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
+# A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
+# A.addIngredient('Bread','Grain',1,'2024-06-30')
+# A.printTable()
+
+# B = Inventory()
+
+# # Deletes database at the end
+# delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
 
