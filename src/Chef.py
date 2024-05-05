@@ -25,25 +25,6 @@ class Chef:
 
 
 
-
-
-# // Function to validate ingredients and add order to priority queue
-# Function ValidateIngredientsAndAddToQueue(order)
-#     Connect to Inventory Database
-#     If checkIngredientsAvailable(order):
-#         Add order to priority queue with appropriate priority
-#         Display message "Order added to preparation queue"
-#     Else:
-#         Display message "Order cannot be processed due to lack of ingredients"
-#     Close Database Connection
-
-# // Function to check ingredient availability
-# Function checkIngredientsAvailable(order)
-#     For each ingredient in order:
-#         If ingredient not in stock:
-#             Return false
-#     Return true
-
 # // Function to distribute orders to chefs
 # Function DistributeOrdersToChefs
 #     While there are orders in the priority queue:

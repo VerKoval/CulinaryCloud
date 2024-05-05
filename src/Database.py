@@ -97,11 +97,10 @@ class Inventory (Database):
         
         self.execute_query(CreateTableInventoryString)
 
-
-    def addIngredient (self, ingredientName, foodType, quantityToAdd, expirationDate):
+    def checkIfPresent (self, ingredientName):
 
         """
-        Function that adds an ingredient into the Inventory database
+        Function that checks if the ingredient is present in the database
         """
 
         # Query that tests whether a value is present in a database or not
@@ -113,8 +112,23 @@ class Inventory (Database):
         
         ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
 
+        # Returns False if the ingredient is not present, otherwise return True
+        if ingredientIsPresent[0][0] == 0:
+            return False
+        else:
+            return True
+
+    def addIngredient (self, ingredientName, foodType, quantityToAdd, expirationDate):
+
+        """
+        Function that adds an ingredient into the Inventory database
+        """
+
+        # Checks if ingredient is present
+        ingredientIsPresentFlag = self.checkIfPresent(ingredientName)
+
         # If ingredient is present (value is False/0), then just update count
-        if ingredientIsPresent[0][0] != 0:
+        if ingredientIsPresentFlag == True:
             updateIngredientString = f"""
                                     UPDATE Inventory
                                     SET stockQuantity = stockQuantity + {quantityToAdd}
@@ -128,9 +142,6 @@ class Inventory (Database):
             insertIngredientString = f"INSERT INTO Inventory VALUES ('{ingredientName}', '{foodType}', {quantityToAdd}, '{expirationDate}');"
             self.execute_query(insertIngredientString)
 
-        ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
-        print(f'Test 2: {ingredientIsPresent[0][0]}')
-
     def printTable (self):
 
         cursor = Database.connection.cursor(buffered=True)
@@ -143,18 +154,18 @@ class Inventory (Database):
         for row in result: 
             print(row, '\n') 
 
-# # Test running code 
+# Test running code 
 
 # A = Inventory()
-# A.createTable()
 
 # A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
 # A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
 # A.addIngredient('Bread','Grain',1,'2024-06-30')
+# print(A.checkIfPresent('Lettuce'))
 # A.printTable()
 
 # B = Inventory()
 
-# # Deletes database at the end
+# Deletes database at the end
 # delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
 
