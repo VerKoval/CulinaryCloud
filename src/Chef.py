@@ -1,71 +1,42 @@
 from queue import Queue
 
-# #   CHEF CHEF CHEF CHEF CHEF 
-# # Use Case 1 (Prepare Order): Pseudo code// Main Program
-# Start Program
-#     Initialize priority queue for orders
-#     While the restaurant is open:
-#         Check for new orders
-#         If new order received:
-#             ValidateIngredientsAndAddToQueue(newOrder)
-#         DistributeOrdersToChefs()
-#     End While
-# End Program
-
 class Chef:
+
+    # Stores queue of all available and unavailable chefs
+    chefAvailableQueue = Queue(maxsize = 10)
+    chefUnavailableQueue = Queue(maxsize = 10)
+
+    def __init__ (self, ID, name, salary):
+        
+        # Adds instance variables
+        self.ID = ID
+        self.name = name
+        self.salary = salary
+
+        # Adds chef to free chef queue upon creation
+        Chef.chefAvailableQueue.put(self)
 
     def prepareOrder (self, orderQueue):
 
         """
-        Chef Use Case 1
+        Chef Use Case 1: Preparing the order
         """
 
-        currentOrder = orderQueue.get()
-        print(currentOrder)
+        if Chef.chefAvailableQueue.qsize() == 0:
+            print('No available chefs to cook meal')
+        
+        else:
+
+            # Gets the order and gets an available chef
+            currentOrder = orderQueue.get()
+            chefCookingOrder = Chef.chefAvailableQueue.get()
+
+            # Also adds chef to unavailable queue
+            Chef.chefUnavailableQueue.put(chefCookingOrder)
+
+            print(f'Preparing: {currentOrder.dish} by Chef: {chefCookingOrder.name}')
 
 
-
-# // Function to distribute orders to chefs
-# Function DistributeOrdersToChefs
-#     While there are orders in the priority queue:
-#         If there is an available chef:
-#             order = priority queue.pop() // Removes the highest priority order
-#             AssignOrderToChef(order, chef)
-#         Else:
-#             Break // Wait for a chef to become available
-
-# // Function to assign order to a chef
-# Function AssignOrderToChef(order, chef)
-#     chef.startPreparation(order)
-#     When chef indicates order is done:
-#         MoveOrderToNextQueue(order) // E.g., to delivery queue
-#         Display message "Order completed and moved to next queue"
-
-# // Function to move completed order to another queue (like delivery)
-# Function MoveOrderToNextQueue(order)
-#     Add order to delivery queue
-
-
-# #Use Case 2 (Special Order Handling):Pseudo code 
-# # Classes and functions to handle special orders for VIP customers
-# // Main Program
-# Start Program
-#     Listen for VIP customer requests
-#     While request received:
-#         HandleVIPSpecialOrder(request)
-#     End While
-# End Program
-
-# // Function to handle special order requests from VIP customers
-# Function HandleVIPSpecialOrder(request)
-#     VIPCustomer = request.getCustomer()
-#     specialMeal = VIPCustomer.requestMeal(request.getMealDetails())
-#     If validateMeal(specialMeal):
-#         AddMealToDatabase(specialMeal)
-#         AddMealToPriorityQueue(specialMeal, VIPCustomer)
-#         Display message "Special meal added to preparation queue and menu database"
-#     Else:
-#         Display message "Meal request cannot be processed"
 
 # // Function to validate the meal details
 # Function validateMeal(meal)
@@ -79,14 +50,6 @@ class Chef:
 #     Connect to Database
 #     Add meal to dishes table
 #     Close Database Connection
-
-# // Function to add the meal to the priority queue
-# Function AddMealToPriorityQueue(meal, customer)
-#     Connect to Order System
-#     Determine priority based on customer status and meal specifics
-#     Add meal to priority queue with determined priority
-#     Close Connection
-
 
 
 

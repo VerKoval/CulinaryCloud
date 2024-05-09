@@ -97,26 +97,28 @@ class Inventory (Database):
         
         self.execute_query(CreateTableInventoryString)
 
-    def checkIfPresent (self, ingredientName):
+    def checkIfPresent (self, ingredientsList):
 
         """
         Function that checks if the ingredient is present in the database
         """
 
-        # Query that tests whether a value is present in a database or not
-        ingredientIsPresentString = f"""
-            SELECT COUNT(1) 
-            FROM Inventory
-            WHERE name = '{ingredientName}';
-            """
-        
-        ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
+        for ingredientName in ingredientsList:
 
-        # Returns False if the ingredient is not present, otherwise return True
-        if ingredientIsPresent[0][0] == 0:
-            return False
-        else:
-            return True
+            # Query that tests whether a value is present in a database or not
+            ingredientIsPresentString = f"""
+                SELECT COUNT(1) 
+                FROM Inventory
+                WHERE name = '{ingredientName}';
+                """
+            
+            ingredientIsPresent = self.execute_query(ingredientIsPresentString, returnFlag=True)
+
+            # Returns False if the ingredient is not present
+            if ingredientIsPresent[0][0] == 0:
+                return False
+            
+        return True
 
     def addIngredient (self, ingredientName, foodType, quantityToAdd, expirationDate):
 
@@ -125,7 +127,7 @@ class Inventory (Database):
         """
 
         # Checks if ingredient is present
-        ingredientIsPresentFlag = self.checkIfPresent(ingredientName)
+        ingredientIsPresentFlag = self.checkIfPresent([ingredientName])
 
         # If ingredient is present (value is False/0), then just update count
         if ingredientIsPresentFlag == True:
@@ -154,18 +156,118 @@ class Inventory (Database):
         for row in result: 
             print(row, '\n') 
 
-# Test running code 
+class Menu (Database):
 
-# A = Inventory()
+    def __init__ (self):
 
-# A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
-# A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
-# A.addIngredient('Bread','Grain',1,'2024-06-30')
-# print(A.checkIfPresent('Lettuce'))
-# A.printTable()
+        self.createTable()
 
-# B = Inventory()
+    def createTable (self):
 
-# Deletes database at the end
-# delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
+        """
+        Function that creates table for the Menu
+        """
+
+        CreateTableMenuString = """
+            CREATE TABLE Menu (
+            dish CHAR(16) PRIMARY KEY,
+            ingredientsList VARCHAR(40),
+            inUse INT
+            );
+            """
+        
+        self.execute_query(CreateTableMenuString)
+
+    def checkIfPresent (self, dishName):
+
+        """
+        Function that checks if the dish is present in the database
+        """
+
+        # Query that tests whether a value is present in a database or not
+        dishIsPresentString = f"""
+            SELECT COUNT(1) 
+            FROM Menu
+            WHERE dish = '{dishName}';
+            """
+        
+        dishIsPresent = self.execute_query(dishIsPresentString, returnFlag=True)
+
+        # Returns False if the ingredient is not present, otherwise return True
+        if dishIsPresent[0][0] == 0:
+            return False
+        else:
+            return True
+
+    def addDish (self, dishName, ingredientsList):
+
+        """
+        Function that adds a dish to the Menu database
+        """
+
+        # Creates list of ingredients as string to store in database
+        ingredientsListString = ''
+        for ingredient in ingredientsList:
+            ingredientsListString += f'{ingredient},'
+        
+        insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', 1);"
+        self.execute_query(insertIngredientString)
+
+    def removeFromCurrentDishes (self, dishName):
+
+        """
+        Removes dish from current dishes that are in use
+        """
+
+        updateInUseString = f"""
+                            UPDATE Menu
+                            SET inUse = 0
+                            WHERE dish = '{dishName}';
+                            """
+            
+        self.execute_query(updateInUseString)
+
+    def addToCurrentDishes (self, dishName):
+
+        """
+        Adds dish to current dishes that are in use
+        """
+
+        updateInUseString = f"""
+                            UPDATE Menu
+                            SET inUse = 1
+                            WHERE dish = '{dishName}';
+                            """
+            
+        self.execute_query(updateInUseString)
+
+    def getIngredients (self, dishName):
+
+        """
+        Function that retrieves the ingredients list for a particular menu item
+        """
+
+        getIngredientsString = f"""
+                            SELECT ingredientsList
+                            FROM Menu
+                            WHERE dish = '{dishName}';
+                            """
+        
+        ingredientsList = self.execute_query(getIngredientsString, returnFlag=True)[0][0]
+        ingredientsList = ingredientsList.split(',')
+        ingredientsList.remove('')
+
+        return ingredientsList
+
+    def printTable (self):
+
+        cursor = Database.connection.cursor(buffered=True)
+        cursor.execute("SELECT * FROM Menu") 
+
+        # fetch all the matching rows 
+        result = cursor.fetchall() 
+  
+        # loop through the rows 
+        for row in result: 
+            print(row, '\n') 
 

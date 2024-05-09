@@ -2,22 +2,30 @@ from queue import Queue
 import mysql.connector
 from mysql.connector import Error
 from Chef import Chef
-from Database import Inventory
+from Database import Inventory, Menu
 
 class Order:
 
     # Stores queue of all order objects that are created
     orderQueue = Queue(maxsize = 10)
 
-    def __init__ (self, customerID, dishName, ingredients):
+    def __init__ (self, customerID, dishName, ingredients=None, specialOrder=False):
 
         # Sets instance variables
         self.customerID = customerID
         self.dish = dishName
-        self.ingredients = ingredients
+        self.specialOrder = specialOrder
 
-        # Checks if ingredients are present then adds to queue
-        self.validateIngredientsAndAddToQueue()
+        # Checks if special order, if so then uses the ingredients provided
+        # If not a special order then it uses the ingredients stored in the Menu database for that dish
+        if specialOrder == True:
+            self.ingredients = ingredients
+        else:
+            menuDB = Menu()
+            if menuDB.checkIfPresent(dishName) == True:
+                self.ingredients = menuDB.getIngredients(dishName)
+            else:
+                print('Dish does not exist')
 
     def validateIngredientsAndAddToQueue (self):
 
@@ -25,8 +33,16 @@ class Order:
         Check if ingredients are present and add to the order queues
         """
 
+        # Creates Inventory Database connection object
+        inventoryDB = Inventory()
+
         # Checks if ingredients available
-        if self.checkIngredientsAvailable(self.ingredients) == True:
+        if inventoryDB.checkIfPresent(self.ingredients) == True:
+
+            # If it is a special order then add the meal to database
+            if self.specialOrder == True:
+                self.addMealToDatabase()
+                print('Added special meal to database')
             
             # Adds order object to the queue
             Order.orderQueue.put(self)
@@ -35,63 +51,23 @@ class Order:
         else:
             print('Order cannot be processed due to lack of ingredients')
 
+    def distributeToChef (self):
 
-    def checkIngredientsAvailable (self, ingredientsList):
-        
         """
-        Function to check ingredient availability
+        Function that distributes order to an available Chef
         """
 
-        # Creates Inventory Database connection object
-        inventoryDB = Inventory()
+        Chef.prepareOrder(self, Order.orderQueue)
 
-        # Loops through each ingredient and checks if it is present
-        for ingredient in ingredientsList:
-            if inventoryDB.checkIfPresent(ingredient) == False:
-                return False
-        return True
+    def addMealToDatabase (self):
 
-    # def distributeToChef (self):
+        """
+        Function that adds a new meal to the database if this is a special order
+        """
 
+        # Creates Menu Database connection object
+        menuDB = Menu()
 
-# # #   CHEF CHEF CHEF CHEF CHEF 
-
-# # Use Case 1 (Prepare Order): Pseudo code// Main Program
-# Start Program
-#     Initialize priority queue for orders
-#     While the restaurant is open:
-#         Check for new orders
-#         If new order received:
-#             ValidateIngredientsAndAddToQueue(newOrder)
-#         DistributeOrdersToChefs()
-#     End While
-# End Program
-
-# Running code
-
-# order1 = Order(123, 'Sandwich', ['Lettuce','Bread'])
-# order2 = Order(124, 'Sandwich', ['Lettuce','Bread'])
-
-# print(order1)
-# print(order2)
-# print(Order.orderQueue.qsize())
-
-# Order.orderQueue.get()
-# print(Order.orderQueue.qsize())
-
-# Order.orderQueue.get()
-# print(Order.orderQueue.qsize())
-
-# connection = create_server_connection("localhost", "root", 'CSC322Wei')
-
-# orderQueue = Queue(maxsize = 10)
-
-# A = Chef()
-# A.prepareOrder(orderQueue)
-
-# B = Chef()
-# B.prepareOrder(orderQueue)
-
-# ingredientList = ['Lettuce','Bread']
-# print(checkIngredientsAvailable(ingredientList))
+        # Adds dish to the Menu database
+        menuDB.addDish(self.dish,self.ingredients)
 
