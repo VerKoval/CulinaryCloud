@@ -107,7 +107,7 @@ def register_delivery():
 def show_importer_registration_form():
     return render_template('reg_food_importer.html')
 
-@app.route('/register/importer', methods=['POST'])
+@app.route('/register/food_importer', methods=['POST'])
 def register_importer():
     print("Registering importer person...")
     try:
@@ -117,6 +117,7 @@ def register_importer():
         email = request.form['email']
         password = request.form['password']
         birthday = request.form['birthday']
+        employee_id = request.form['employee_id'] 
 
         # Logging received data for debugging
         print(f"Received data: {first_name}, {last_name}, {email}")
@@ -124,11 +125,12 @@ def register_importer():
         # Generating a password hash
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Assuming employee_id is submitted via form, otherwise generate as needed
-        employee_id = request.form['employee_id'] 
+        # Validating employee ID
+        if not validate_employee_id('food_importer', employee_id):
+            raise ValueError("provided employee ID is invalid.")
 
-        # Add the new employee to the database via your user management system
-        user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='importer', employee_id=employee_id)
+        # Add the new employee to the database
+        user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='food_importer', employee_id=employee_id)
 
         # Redirect to a success page after registration
         return redirect(url_for('success_page'))
