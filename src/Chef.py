@@ -3,14 +3,17 @@ from Database import Menu, Feedback
 
 class Chef:
 
+    currentChefID = 2000
+
     # Stores queue of all available and unavailable chefs
     chefAvailableQueue = Queue(maxsize = 10)
     chefUnavailableQueue = Queue(maxsize = 10)
 
-    def __init__ (self, ID, name, salary):
+    def __init__ (self, name, salary):
         
         # Adds instance variables
-        self.ID = ID
+        Chef.currentChefID += 1
+        self.ID = Chef.currentChefID
         self.name = name
         self.salary = salary
 

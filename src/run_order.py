@@ -23,8 +23,8 @@ orderTest2 = Order(124, 'Salad')
 orderTestVIP = Order(125, 'Special Salad', specialOrder=True, ingredients=['Lettuce','Tomatoes','Chicken'])
 
 # Creates Chefs to make the orders
-chef1 = Chef(1001, 'John Smith', 50000)
-chef2 = Chef(1002, 'Rosalyn Franklin', 50000)
+chef1 = Chef('John Smith', 50000)
+chef2 = Chef('Rosalyn Franklin', 50000)
 
 # Runs validation of ingredients, adds to queue, and then distributes each order to an available chef
 orderTest1.validateIngredientsAndAddToQueue()
