@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CulinaryCloud</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="top-right">
+        <a href="/login" class="login-button">Login</a>
+    </div>
+
+    <div class="centered-content">
+        <h1>CulinaryCloud</h1>
+        <p class="welcome-text">Welcome</p>
+        <!-- Only View Menu button is shown -->
+        <a href="/view_menu" class="view-menu-button">View Menu</a>
+    </div>
+    <footer>
+        <p>Copyright © 2024 CulinaryCloud</p>
+    </footer>
+</body>
+</html>
+
