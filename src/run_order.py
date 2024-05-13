@@ -7,6 +7,7 @@ A = Database.Inventory()
 A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
 A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
 A.addIngredient('Tomatoes','Vegetable',10,'2024-06-22')
+A.addIngredient('Chicken','Meat',5,'2024-06-18')
 A.addIngredient('Bread','Grain',1,'2024-06-30')
 A.printTable()
 
@@ -19,7 +20,7 @@ M.printTable()
 # Creates orders including one VIP Order
 orderTest1 = Order(123, 'Sandwich')
 orderTest2 = Order(124, 'Salad')
-orderTestVIP = Order(125, 'Special Salad', specialOrder=True, ingredients=['Lettuce','Tomatoes'])
+orderTestVIP = Order(125, 'Special Salad', specialOrder=True, ingredients=['Lettuce','Tomatoes','Chicken'])
 
 # Creates Chefs to make the orders
 chef1 = Chef(1001, 'John Smith', 50000)

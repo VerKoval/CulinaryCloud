@@ -1,6 +1,10 @@
 import mysql.connector
 from mysql.connector import Error
+<<<<<<< HEAD
 from helpers import validate_employee_id
+=======
+from datetime import date
+>>>>>>> 582d11e (Added ingredients complaint feature)
 
 def create_database(connection, db_name):
     cursor = connection.cursor()
