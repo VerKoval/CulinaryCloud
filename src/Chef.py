@@ -1,4 +1,5 @@
 from queue import Queue
+from Database import Menu, Feedback
 
 class Chef:
 
@@ -36,23 +37,35 @@ class Chef:
 
             print(f'Preparing: {currentOrder.dish} by Chef: {chefCookingOrder.name}')
 
+    def raiseQualityIssue (self, accusedID, complaintText):
 
+        """
+        Use Case 3: Raises quality issue of the ingredients from the chef side
+        """
 
-# // Function to validate the meal details
-# Function validateMeal(meal)
-#     // Example validation checks might include ingredient availability or recipe integrity
-#     If meal has all necessary details and ingredients are available:
-#         Return true
-#     Return false
+        # Creates feedback database table and connection
+        feedbackDB = Feedback()
 
-# // Function to add the meal to the restaurant's dishes database
-# Function AddMealToDatabase(meal)
-#     Connect to Database
-#     Add meal to dishes table
-#     Close Database Connection
+        # Adds feedback using feedback function
+        feedbackDB.addFeedback(self.ID, accusedID, 'IngredientQuality', complaintText)
 
+    # def setCurrentMenu (self, menuItems):
 
+    #     """
+    #     Function that takes in a list of menu items and sets that as the current menu (one in use)
+    #     """
 
+    #     menuDB = Menu()
+
+    #     for dish in menuItems:
+    #         if menuDB.checkIfPresent(dish) == True:
+    #             if menuDB.checkIfInUse(dish) == False:
+    #                 Menu.addToCurrentDishes()
+    #         else:
+    #             print('Entered a dish that does not exist')
+    #             return
+                
+    
 # #Use Case 3 (Raise Quality Issue): Pseudo code  
 # # Classes and functions to handle quality issues for a food importer
 # // Main Program
@@ -124,34 +137,6 @@ class Chef:
 #         Display message "New dish and ingredients added to database"
 #     Else:
 #         Display message "Dish already exists in the database"
-
-# // Function to add dish to the dishes database
-# Function AddDishToDatabase(dish)
-#     Connect to Database
-#     Insert dish into dishes table
-#     Close Database Connection
-
-# // Function to add ingredient to the ingredients database
-# Function AddIngredientToDatabase(ingredient)
-#     Connect to Database
-#     Insert ingredient into ingredients table
-#     Close Database Connection
-
-# // Function to check if a dish already exists in the database
-# Function DishExistsInDatabase(dishName)
-#     Connect to Database
-#     Search for dish by name in dishes table
-#     If dish found:
-#         Return true
-#     Return false
-
-# // Function to check if an ingredient already exists in the database
-# Function IngredientExistsInDatabase(ingredientName)
-#     Connect to Database
-#     Search for ingredient by name in ingredients table
-#     If ingredient found:
-#         Return true
-#     Return false
 
 # // Function to display the current menu
 # Function DisplayCurrentMenu
