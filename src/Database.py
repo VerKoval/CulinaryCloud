@@ -323,6 +323,86 @@ class UserManagement(Database):
         self.execute_query(add_employee_query)
         print("Employee added successfully")
 
+class Customer (Database):
+
+    def __init__ (self):
+
+        self.createTable()
+
+    def createTable (self):
+
+        """
+        Function that creates table for the Menu
+        """
+
+        CreateTableMenuString = """
+            CREATE TABLE Customer (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            first_name VARCHAR(255),
+            last_name VARCHAR(255),
+            paymentInfo INT,
+            vip BOOLEAN,
+            warnings INT
+            orders INT
+            email VARCHAR(255) UNIQUE,
+            password VARCHAR(255),
+            birthday DATE);
+            """
+        
+        self.execute_query(CreateTableMenuString)
+        
+# Add Customer using their first name, last name, email, password, and birthday
+    def addCustomer (self, first_name, last_name, email, password_hash, birthday):
+        
+        AddCustomer = f"INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
+                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"
+        self.execute_query(AddCustomer)
+        print("Customer Added")
+# Remove a customer with a certain ID
+    def removeCustomer (self, customerID):
+
+        """
+        Removes dish from current dishes that are in use
+        """
+
+        RemoveCustomer = f"""
+                            DELETE FROM Customer
+                            WHERE ID = 123;
+                            """
+            
+        self.execute_query(RemoveCustomer)
+        print("Customer Removed")
+# Turn a VIP customer to non VIP and delete warnings (for when the VIP customer receives >2 complaints)
+    def demoteCustomer (self, customerID):
+
+        """
+        Adds dish to current dishes that are in use
+        """
+
+        demoteCustomer = f"""
+                            UPDATE Customer
+                            SET vip = FALSE, warnings = 0
+                            WHERE ID = {customerID};
+                            """
+            
+        self.execute_query(demoteCustomer)
+        print("Customer Demoted")
+# Turn customer into VIP
+    def promoteCustomer (self, customerID):
+
+        """
+        Function that retrieves the ingredients list for a particular menu item
+        """
+
+        PromoteCustomer= f"""
+                            UPDATE Customer
+                            SET vip = TRUE
+                            WHERE ID = {customerID};
+                            """
+        
+        self.execute_query(PromoteCustomer)
+        print("Customer Promoted")
+
 def execute_query(self, query):
     cursor = Database.connection.cursor()
     try:
