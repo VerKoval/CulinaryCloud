@@ -183,5 +183,17 @@
             </tr>
         </tbody>
     </table>
+	<script>
+        function editCount(name, currentCount) {
+            var newCount = prompt('Enter the new amount:', currentCount);
+            if (newCount !== null && newCount !== '') {
+                // Update the UI with the new count
+                var countCell = document.querySelector('td:contains("' + name + '")').nextElementSibling.nextElementSibling.nextElementSibling;
+                countCell.textContent = newCount;
+
+                // You can also send the new count to the server for further processing if needed
+            }
+        }
+    </script>
     </body>
 </html>
