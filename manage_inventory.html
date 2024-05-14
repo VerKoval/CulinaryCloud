@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,47 +27,47 @@
     </style>
 </head>
 <body>
- <h1>Ingredient Database</h1>
+<h1>Ingredient Database</h1>
 <form action="/add" method="post">
-        <h2>Add New Ingredient</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br>
-        <label for="type">Type:</label>
-        <input type="text" id="type" name="type"><br>
-        <label for="shipment_date">Shipment Date:</label>
-        <input type="date" id="shipment_date" name="shipment_date"><br>
-        <label for="expiration_date">Expiration Date:</label>
-        <input type="date" id="expiration_date" name="expiration_date"><br>
-        <label for="count">Count:</label>
-        <input type="number" id="count" name="count"><br>
-        <button type="submit">Add Ingredient</button>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Ingredient Name</th>
-                <th>Ingredient Type</th>
-                <th>Date of Shipment</th>
-                <th>Date of Expiration</th>
-                <th>Count</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Flour</td>
-                <td>Grain</td>
-                <td>2024-04-01</td>
-                <td>2024-10-01</td>
-                <td>100</td>
-                <td>
-                    <button type="button" onclick="alert('Count: 100')">Edit Count</button>
-                    <form action="/delete" method="post">
-                        <input type="hidden" name="name" value="Flour">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
+    <h2>Add New Ingredient</h2>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br>
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type"><br>
+    <label for="shipment_date">Shipment Date:</label>
+    <input type="date" id="shipment_date" name="shipment_date"><br>
+    <label for="expiration_date">Expiration Date:</label>
+    <input type="date" id="expiration_date" name="expiration_date"><br>
+    <label for="count">Count:</label>
+    <input type="number" id="count" name="count"><br>
+    <button type="submit">Add Ingredient</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Ingredient Name</th>
+        <th>Ingredient Type</th>
+        <th>Date of Shipment</th>
+        <th>Date of Expiration</th>
+        <th>Count</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Flour</td>
+        <td>Grain</td>
+        <td>2024-04-01</td>
+        <td>2024-10-01</td>
+        <td><span id="flourCount">100</span></td>
+        <td>
+            <button type="button" onclick="editCount('Flour')">Edit Count</button>
+            <form action="/delete" method="post">
+                <input type="hidden" name="name" value="Flour">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
             <tr>
                 <td>Sugar</td>
                 <td>Sweetener</td>
@@ -184,16 +183,15 @@
         </tbody>
     </table>
 	<script>
-        function editCount(name, currentCount) {
-            var newCount = prompt('Enter the new amount:', currentCount);
-            if (newCount !== null && newCount !== '') {
-                // Update the UI with the new count
-                var countCell = document.querySelector('td:contains("' + name + '")').nextElementSibling.nextElementSibling.nextElementSibling;
-                countCell.textContent = newCount;
+    function editCount(name) {
+        var newCount = prompt('Enter the new count:');
+        if (newCount !== null && newCount !== '') {
+            // Update the UI with the new count
+            document.getElementById(name.toLowerCase() + 'Count').textContent = newCount;
 
-                // You can also send the new count to the server for further processing if needed
-            }
+            // You can also send the new count to the server for further processing if needed
         }
-    </script>
+    }
+</script>
     </body>
 </html>
