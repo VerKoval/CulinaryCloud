@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-from helpers import validate_employee_id
 from datetime import date
 
 def create_database(connection, db_name):
@@ -47,11 +46,11 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
     return connection
 
 class Database:
-
+    password = "Vk182516"
     # Creates class variables regarding the database and connection to SQL
-    connection = create_server_connection("localhost", "root", 'CSC322Wei')
+    connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
-    connection = create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud')
+    connection = create_server_connection("localhost", "root", password, 'CulinaryCloud')
 
     def execute_query(self, query, returnFlag=False):
 
@@ -174,6 +173,8 @@ class Menu (Database):
             ingredientsList VARCHAR(40),
             price INT,
             inUse INT
+            ratingSum INT
+            ratingNumber INT
             );
             """
         
@@ -211,7 +212,7 @@ class Menu (Database):
         for ingredient in ingredientsList:
             ingredientsListString += f'{ingredient},'
         
-        insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', {price}, 1);"
+        insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', {price}, 1, 0, 0);"
         self.execute_query(insertIngredientString)
 
     def removeFromCurrentDishes (self, dishName):
@@ -227,6 +228,35 @@ class Menu (Database):
                             """
             
         self.execute_query(updateInUseString)
+
+    def addRating (self, dishName, rating):
+
+        """
+        Adds rating
+        """
+
+        updateInUseString = f"""
+                            UPDATE Menu
+                            SET ratingSum = ratingSum + {rating}
+                            SET ratingNumber = ratingNumber + 1
+                            WHERE dish = '{dishName}';
+                            """
+            
+        self.execute_query(updateInUseString)
+
+    def giveRating (self, dishName, rating):
+
+        """
+        Gives rating
+        """
+
+        updateInUseString = f"""
+                            SELECT IFNULL(ratingSum / ratingNumber, 0) AS averageRating FROM Menu 
+                            WHERE dishName = '{dishName}';
+                            """
+            
+        rating = self.execute_query(updateInUseString, returnFlag=True)
+        return rating
 
     def addToCurrentDishes (self, dishName):
 
@@ -310,13 +340,17 @@ class UserManagement(Database):
     def create_user_table(self):
         create_table_query = """
         CREATE TABLE IF NOT EXISTS Customers (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            ID INT PRIMARY KEY AUTO_INCREMENT,
             first_name VARCHAR(255),
             last_name VARCHAR(255),
+            money INT,
+            paymentInfo INT,
+            vip BOOLEAN,
+            warnings INT
+            orders INT
             email VARCHAR(255) UNIQUE,
             password VARCHAR(255),
-            birthday DATE
-        );
+            birthday DATE);
         """
         self.execute_query(create_table_query)
         print("Customer table created successfully")
@@ -337,10 +371,8 @@ class UserManagement(Database):
         print("Employee table created successfully")
 
     def add_customer(self, first_name, last_name, email, password_hash, birthday):
-        add_customer_query = f"""
-        INSERT INTO Customers (first_name, last_name, email, password, birthday) 
-        VALUES ('{first_name}', '{last_name}', '{email}', '{password_hash}', '{birthday}');
-        """
+        add_customer_query = f"""INSERT INTO Customers (first_name, last_name, money, paymentInfo, vip, warnings, orders, email, password, birthday) VALUES 
+                        ('{first_name}', '{last_name}', 0, 0, 0, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
         self.execute_query(add_customer_query)
         print("Customer added successfully")
 
@@ -355,7 +387,7 @@ class UserManagement(Database):
         self.execute_query(add_employee_query)
         print("Employee added successfully")
 
-class Customer (Database):
+class Customers (Database):
 
     def __init__ (self):
 
@@ -367,11 +399,12 @@ class Customer (Database):
         Function that creates table for the Menu
         """
 
-        CreateTableMenuString = """
-            CREATE TABLE Customer (
+        CreateTableCustomerString = """
+            CREATE TABLE Customers (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             first_name VARCHAR(255),
             last_name VARCHAR(255),
+            money INT,
             paymentInfo INT,
             vip BOOLEAN,
             warnings INT
@@ -381,38 +414,42 @@ class Customer (Database):
             birthday DATE);
             """
         
-        self.execute_query(CreateTableMenuString)
+        self.execute_query(CreateTableCustomerString)
         
 # Add Customer using their first name, last name, email, password, and birthday
     def addCustomer (self, first_name, last_name, email, password_hash, birthday):
         
-        AddCustomer = f"""INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
-                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
+        AddCustomer = f"""INSERT INTO Customers (first_name, last_name, money, paymentInfo, vip, warnings, orders, email, password, birthday) VALUES 
+                        ('{first_name}', '{last_name}', 0, 0, 0, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
+
         self.execute_query(AddCustomer)
         print("Customer Added")
 # Remove a customer with a certain ID
     def removeCustomer (self, customerID):
 
-        """
-        Removes dish from current dishes that are in use
-        """
-
         RemoveCustomer = f"""
-                            DELETE FROM Customer
-                            WHERE ID = 123;
+                            DELETE FROM Customers
+                            WHERE ID = {customerID};
                             """
             
         self.execute_query(RemoveCustomer)
         print("Customer Removed")
+# Add or subtract money from customers account
+    def addMoney (self, customerID, money):
+
+        change = f"""
+                            UPDATE Customers
+                            SET money = warnings + {money}
+                            WHERE ID = {customerID};
+                            """
+            
+        self.execute_query(change)
+        print("Money changed")
 # Turn a VIP customer to non VIP and delete warnings (for when the VIP customer receives >2 complaints)
     def demoteCustomer (self, customerID):
 
-        """
-        Adds dish to current dishes that are in use
-        """
-
         demoteCustomer = f"""
-                            UPDATE Customer
+                            UPDATE Customers
                             SET vip = FALSE, warnings = 0
                             WHERE ID = {customerID};
                             """
@@ -422,18 +459,64 @@ class Customer (Database):
 # Turn customer into VIP
     def promoteCustomer (self, customerID):
 
-        """
-        Function that retrieves the ingredients list for a particular menu item
-        """
-
         PromoteCustomer= f"""
-                            UPDATE Customer
+                            UPDATE Customers
                             SET vip = TRUE
                             WHERE ID = {customerID};
                             """
         
         self.execute_query(PromoteCustomer)
         print("Customer Promoted")
+
+    # Add customer warning
+    def addWarning (self, customerID, numWarnings = 1):
+        AddWarning= f"""
+                            UPDATE Customers
+                            SET warnings = warnings + {numWarnings}
+                            WHERE ID = {customerID};
+                            """
+
+        self.execute_query(AddWarning)
+        print("Warning added")  
+    # Add customer order
+    def addNumOrders (self, customerID, numOrders = 1):
+
+        AddWarning= f"""
+                            UPDATE Customers
+                            SET orders = orders + {numOrders}
+                            WHERE ID = {customerID};
+                            """
+
+        self.execute_query(AddWarning)
+        print("Order added")
+    # Total Money spent by cusomter update
+    def AddPayment (self, customerID, PaymentAmount):
+
+        AddWarning= f"""
+                            UPDATE Customers
+                            SET paymentInfo = paymentInfo + {PaymentAmount}
+                            WHERE ID = {customerID};
+                            """
+
+        self.execute_query(AddWarning)
+        print("Payment added to record")
+    
+    def checkCustomer(self, id):
+
+        # Query that tests whether a value is present in a database or not
+        check = f"""
+            SELECT COUNT(1) 
+            FROM Customers
+            WHERE ID = '{id}';
+            """
+        
+        checking = self.execute_query(check, returnFlag=True)
+        # Returns False if the ingredient is not present, otherwise return True
+        if checking[0][0] == 0:
+            return False
+        else:
+            return True
+
 
 def execute_query(self, query):
     cursor = Database.connection.cursor()
