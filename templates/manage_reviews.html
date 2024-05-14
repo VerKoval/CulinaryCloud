@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Issues</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Quality Issues</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Issue ID</th>
+                <th>Description</th>
+                <th>Reported By</th>
+                <th>Date Reported</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Example issue 1</td>
+                <td>Bella Smith</td>
+                <td>2024-05-01</td>
+                <td>Open</td>
+                <td>
+                    <button type="button" onclick="resolveIssue(1)">Resolve</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Example issue 2</td>
+                <td>Stevie Nicks</td>
+                <td>2024-05-02</td>
+                <td>Open</td>
+                <td>
+                    <button type="button" onclick="resolveIssue(2)">Resolve</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="/add_quality_issue" method="post">
+        <h2>Add New Quality Issue</h2>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br>
+        <label for="reported_by">Reported By:</label>
+        <input type="text" id="reported_by" name="reported_by" required><br>
+        <label for="date_reported">Date Reported:</label>
+        <input type="date" id="date_reported" name="date_reported" required><br>
+        <button type="submit">Add Quality Issue</button>
+    </form>
+
+    <script>
+        function resolveIssue(issueId) {
+            alert('Resolving issue ' + issueId);
+        }
+    </script>
+</body>
+</html>
