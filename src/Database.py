@@ -386,8 +386,8 @@ class Customer (Database):
 # Add Customer using their first name, last name, email, password, and birthday
     def addCustomer (self, first_name, last_name, email, password_hash, birthday):
         
-        AddCustomer = f"INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
-                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"
+        AddCustomer = f"""INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
+                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
         self.execute_query(AddCustomer)
         print("Customer Added")
 # Remove a customer with a certain ID
