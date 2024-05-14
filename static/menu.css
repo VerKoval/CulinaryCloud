@@ -1,0 +1,50 @@
+/* Styling specific to surfer_menu_page */
+.surfer-menu-page header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.surfer-menu-page h1 {
+    font-size: 3em; /* Largest title */
+    color: #333; /* Dark gray for better readability */
+}
+
+.surfer-menu-page h2 {
+    font-size: 2em; /* Larger than normal text but smaller than title */
+    color: #555; /* Slightly lighter gray */
+    margin-bottom: 10px; /* Space below headings */
+}
+
+.surfer-menu-page section {
+    margin: 20px auto; /* Center sections with some margin around */
+    width: 80%; /* Limiting width for better readability */
+}
+
+.surfer-menu-page ul {
+    list-style-type: none; /* No bullets */
+    padding: 0; /* Remove padding */
+}
+
+.surfer-menu-page li {
+    font-size: 1.2em; /* Larger text for menu items */
+    margin: 8px 0; /* Space between menu items */
+    border-bottom: 1px solid #ccc; /* Subtle separator */
+    padding-bottom: 5px; /* Space below each item */
+}
+
+.surfer-menu-page .view-menu-button {
+    font-size: 1.5em; /* Larger button text */
+    padding: 10px 20px; /* Bigger button */
+    margin-top: 20px; /* Space above the button */
+}
+
+.surfer-menu-page footer {
+    font-size: 0.8em; /* Smaller footer text */
+    color: #666; /* Gray color for the footer */
+    text-align: center;
+    padding: 12px 0; /* Padding inside the footer */
+    width: 100%;
+    background-color: #f8f2eb; /* Consistent with the site theme */
+    position: absolute;
+    bottom: 0;
+}

@@ -1,7 +1,13 @@
 import mysql.connector
 from mysql.connector import Error
 from helpers import validate_employee_id
+from flask_sqlalchemy import SQLAlchemy
 
+<<<<<<< HEAD
+=======
+db = SQLAlchemy()
+
+>>>>>>> 310b1bc (updated version)
 def create_database(connection, db_name):
     cursor = connection.cursor()
     cursor.execute(f"SHOW DATABASES LIKE '{db_name}';")
@@ -275,6 +281,25 @@ class UserManagement(Database):
     def __init__(self, db_connection):
         self.connection = db_connection
 
+    def get_user_role(self, email, password):
+        """
+        Function that retrieves the role of a user based on their email and password.
+        """
+        try:
+            cursor = self.connection.cursor()
+            query = f"""
+            SELECT role FROM Employees WHERE email = '{email}' AND password = '{password}';
+            """
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if result:
+                return result[0]  # Return the role if the user exists
+            else:
+                return None  # Return None if user not found or credentials don't match
+        except Error as err:
+            print(f"Error during role retrieval: {err}")
+            return None
+
     def create_user_table(self):
         create_table_query = """
         CREATE TABLE IF NOT EXISTS Customers (
@@ -301,6 +326,20 @@ class UserManagement(Database):
             role VARCHAR(50)
         );
         """
+    def create_quality_issue_table(self):
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS QualityIssues (
+            issue_id INT AUTO_INCREMENT PRIMARY KEY,
+            description TEXT,
+            reported_by VARCHAR(255),
+            date_reported DATE,
+            status VARCHAR(50) DEFAULT 'Open'
+        );
+        """
+        self.execute_query(create_table_query)
+        print("Quality issue table created successfully")
+
+
         self.execute_query(create_table_query)
         print("Employee table created successfully")
 
@@ -333,5 +372,39 @@ def execute_query(self, query):
         print(f"Error during query execution: {err}")
         raise
 
+<<<<<<< HEAD
+=======
+def add_quality_issue(self, description, reported_by, date_reported):
+        add_issue_query = """
+        INSERT INTO QualityIssues (description, reported_by, date_reported) 
+        VALUES (%s, %s, %s);
+        """
+        data = (description, reported_by, date_reported)
+        self.execute_query(add_issue_query, data)
+        print("Quality issue added successfully")
+
+def execute_query(self, query, data=None):
+        cursor = self.connection.cursor()
+        try:
+            if data:
+                cursor.execute(query, data)
+            else:
+                cursor.execute(query)
+            self.connection.commit()
+            print("Query successful")
+        except Error as err:
+            print(f"Error during query execution: {err}")
+            raise
+
+def get_all_employees(self):
+    try:
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM Employees")
+            return cursor.fetchall()
+    except Exception as e:
+        print("Error fetching employees:", e)
+        return []
+
+>>>>>>> 310b1bc (updated version)
 # Deletes database at the end
 #delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')

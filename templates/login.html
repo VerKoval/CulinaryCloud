@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="login-container">
-        <form action="/submit-login" method="POST">
+        <form action="/login" method="POST">
             <h2>Login</h2>
             <div class="input-group">
                 <label for="email">Email</label>
@@ -18,11 +18,22 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            <div class="input-group">
+                <label for="role">Role</label>
+                <select id="role" name="role">
+                    <option value="chef">Chef</option>
+                    <option value="customer">Customer</option>
+                    <option value="food_importer">Food Importer</option>
+                    <option value="delivery">Delivery</option>
+                    <option value="manager">Manager</option>
+                </select>
+            </div>
             <div class="actions">
                 <button type="submit">Login</button>
-                <a href="/register">Register</a>| 
+                <a href="/register">Register</a>
             </div>
         </form>
     </div>
 </body>
 </html>
+

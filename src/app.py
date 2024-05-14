@@ -1,7 +1,7 @@
 import random 
 import bcrypt
 import re
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import os
 from werkzeug.security import generate_password_hash
 import mysql.connector
@@ -22,19 +22,59 @@ db_connection = create_server_connection("localhost", "root", 'CSC322Wei', 'Culi
 user_management = UserManagement(db_connection)
 user_management.create_user_table()  # Creates customer table
 user_management.create_employee_table()  # Creates employee table
-
+user_management.create_quality_issue_table()  # Creates quality issue table
 
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
 bcrypt = Bcrypt(app)
 user_management = UserManagement(db_connection)
+app.config['SECRET_KEY'] = 'KEYCC14052024'
 
 @app.route('/')
-def home():
+def front_page():
     return render_template('front_page.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Check hardcoded credentials
+        if email == 'bellasmith1@gmail.com' and password == '12345':
+            return redirect(url_for('customer_home_page'))  # Correct use of url_for
+        elif email == 'davidyale@gmail.com' and password == 'david':
+            return redirect(url_for('customer_home_page'))  # Correct use of url_for
+        elif email == 'sn56@gmail.com' and password == 'nicks56':
+            return redirect(url_for('food_importer_home_page'))
+        elif email == 'clarabowts@gmail.com' and password == 'cbttpdts':
+            return redirect(url_for('manager_home_page'))
+        else:
+            return render_template('login.html', error="Invalid email or password. Please try again.")
+
     return render_template('login.html')
+
+@app.route('/customer_home_page')
+def customer_home_page():
+    # This will render a generic customer home page
+    return render_template('customer_home_page.html')
+
+@app.route('/chef_home_page')
+def chef_home_page():
+    return render_template('chef_home_page.html')
+
+@app.route('/foodimporter_home_page')
+def food_importer_home_page():
+    # This will render a specific page for food importers
+    return render_template('foodimporter_home_page.html')
+
+
+@app.route('/delivery_home_page')
+def delivery_home_page():
+    return render_template('delivery_home_page.html')
+
+@app.route('/manager_home_page')
+def manager_home_page():
+    return render_template('manager_home_page.html')
 
 @app.route('/register')
 def register():
@@ -61,7 +101,7 @@ def register_chef():
 
         user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='chef', employee_id=employee_id)
         
-        return redirect(url_for('success_page'))
+        return redirect(url_for('chef_home_page'))
     except Exception as e:
         print(f"Error during chef registration: {e}")
         return str(e), 500
@@ -96,7 +136,7 @@ def register_delivery():
         user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='delivery', employee_id=employee_id)
 
         # Redirect to a success page after registration
-        return redirect(url_for('success_page'))
+        return redirect(url_for('delivery_home_pag'))
 
     except Exception as e:
         # Catching and printing any errors that occur during registration
@@ -133,7 +173,7 @@ def register_importer():
         user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='food_importer', employee_id=employee_id)
 
         # Redirect to a success page after registration
-        return redirect(url_for('success_page'))
+        return redirect(url_for('foodimpoter_home_page.html'))
 
     except Exception as e:
         # Catching and printing any errors that occur during registration
@@ -168,16 +208,12 @@ def register_manager():
         user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='manager', employee_id=employee_id)
 
         # Redirect to a success page after registration
-        return redirect(url_for('success_page'))
+        return redirect(url_for('manager_home_page'))
 
     except Exception as e:
         # Catching and printing any errors that occur during registration
         print(f"Error during manager person registration: {e}")
         return str(e), 500
-
-@app.route('/success')
-def success_page():
-    return "Registration Successful!"  # Or render a success template
 
 @app.route('/register/customer', methods=['GET'])
 def show_customer_registration_form():
@@ -199,12 +235,77 @@ def register_customer():
     user_management.add_customer(first_name, last_name, email, password_hash, birthday)
     
     # Redirect to customer success page
-    return redirect(url_for('customer_success_page'))
+    return redirect(url_for('customer_home_page'))
 
-@app.route('/customer_success')
-def customer_success_page():
-    return render_template('customer_success.html')
+@app.route('/surfer_menu_page')
+def surfer_menu():
+    return render_template('surfer_menu_page.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()  
+    return redirect(url_for('front_page'))
+
+@app.route('/manage_inventory')
+def manage_inventory():
+    # Fetch ingredients from your database or any other data source
+    return render_template('manage_inventory.html')
+
+@app.route('/raise_quality_f')
+def raise_quality_f():
+    return render_template('raise_quality_f.html')
+
+
+@app.route('/raise_quality_issue', methods=['POST'])
+def handle_quality_issue():
+    description = request.form['description']
+    reported_by = request.form['reported_by']
+    date_reported = request.form['date_reported']
+
+    # Ensure these are your correct credentials
+    db_connection = create_server_connection("localhost", "actual_mysql_username", "actual_mysql_password", "CulinaryCloud")
+    if db_connection is None:
+        print("Failed to connect to database")
+        return "Database connection error", 500
+
+    user_manager = UserManagement(db_connection)
+    user_manager.add_quality_issue(description, reported_by, date_reported)
+
+    return redirect(url_for('foodimporter_home_page'))
+
+@app.route('/manage_staff')
+def manage_staff():
+    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Employees")
+    employees = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('manage_staff.html', employees=employees)
+
+@app.route('/add_employee', methods=['POST'])
+def add_employee():
+    employee_id = request.form['employee_id']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    email = request.form['email']
+    password = request.form['password']
+    birthday = request.form['birthday']
+    role = request.form['role']
+
+    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
+    cursor = connection.cursor()
+    query = """
+    INSERT INTO Employees (employee_id, first_name, last_name, email, password, birthday, role)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """
+    values = (employee_id, first_name, last_name, email, password, birthday, role)
+    cursor.execute(query, values)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('manage_staff'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
