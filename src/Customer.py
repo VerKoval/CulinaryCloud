@@ -11,7 +11,7 @@ class Customer:
     cartPrice = 0 #Total price of items in cart
     Cust = Customers()
 
-    def __init__ (self, customerID, firstname, lastname, money, paymentInfo = 0, vip = False, warn=0, orders = 0, pressRatings = False):
+    def __init__ (self, customerID, firstname, lastname, money, paymentInfo = 0, vip = False, warn=0, orders = 0):
 
         # Sets instance variables
         self.ID = customerID
@@ -40,7 +40,7 @@ class Customer:
     def placeOrder(self, menuItem, checkout = False):
         if not Customer.Cust.checkCustomer(self.ID): return #checks if customer
         MenuDB = Menu()
-        if MenuDB.checkIfPresent(menuItem):
+        if MenuDB.checkIfPresent(menuItem) or not MenuDB.checkIfPresent(menuItem):
             discount = 0.9 if self.VIP else 1 #discount for vips
             Customer.cartPrice += discount*MenuDB.getPrice(menuItem)
             Customer.cartQueue.put(menuItem)
@@ -60,7 +60,8 @@ class Customer:
                 order.distributeToChef()
                 self.money -= Customer.cartPrice
                 Customer.Cust.addMoney(self.ID, -Customers.cartPrice)
-                return Customer.cartPrice
+                Customer.cartPrices()
+                Customer.cartPrice = 0
     
     #allow customer to add money to their account
     def addMoney(self, add):
@@ -109,6 +110,14 @@ class Customer:
         item += "special"
         Customer.cartQueue.put(item)
         Customer.cartPrice += price
+
+    #get number of items in cart
+    def numCart(self):
+        return Customer.cartQueue.qsize()
+    
+    #get number of items in cart
+    def cartPrices(self):
+        return Customer.cartPrice
 
     
 

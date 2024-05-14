@@ -51,8 +51,8 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
     return connection
 
 class Database:
-    # Creates class variables regarding the database and connection to SQL
     password = 'CC14052024'
+
     connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
     connection = create_server_connection("localhost", "root", password, 'CulinaryCloud')
@@ -173,7 +173,7 @@ class Menu (Database):
         """
 
         CreateTableMenuString = """
-            CREATE TABLE Menu (
+            CREATE TABLE IF NOT EXISTS Menu (
             dish CHAR(16) PRIMARY KEY,
             ingredientsList VARCHAR(40),
             price INT,
@@ -371,8 +371,8 @@ class UserManagement(Database):
             money INT,
             paymentInfo INT,
             vip BOOLEAN,
-            warnings INT
-            orders INT
+            warnings INT,
+            orders INT,
             email VARCHAR(255) UNIQUE,
             password VARCHAR(255),
             birthday DATE);
@@ -446,8 +446,8 @@ class Customers (Database):
             money INT,
             paymentInfo INT,
             vip BOOLEAN,
-            warnings INT
-            orders INT
+            warnings INT,
+            orders INT,
             email VARCHAR(255) UNIQUE,
             password VARCHAR(255),
             birthday DATE);
