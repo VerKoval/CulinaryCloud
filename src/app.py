@@ -11,6 +11,7 @@ from flask_bcrypt import Bcrypt
  # app.py
 from helpers import validate_employee_id
 from Database import create_server_connection
+import logging 
 
 
 # Determine the absolute paths to the static and templates folders
@@ -306,6 +307,121 @@ def add_employee():
     connection.close()
 
     return redirect(url_for('manage_staff'))
+
+@app.route('/manage_customers')
+def manage_customers():
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='CC14052024',
+        database='CulinaryCloud'
+    )
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Customers")  # Adjust the table name and columns as necessary
+    customers = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('manage_customers.html', customers=customers)
+
+@app.route('/add_customer', methods=['POST'])
+def add_customer():
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    email = request.form['email']
+    password = request.form['password']
+    birthday = request.form['birthday']
+
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='CC14052024',
+        database='CulinaryCloud'
+    )
+    cursor = connection.cursor()
+    query = """
+    INSERT INTO Customers (first_name, last_name, email, password, birthday)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+    values = (first_name, last_name, email, password, birthday)
+    cursor.execute(query, values)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('manage_customers'))
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+
+@app.route('/')
+def show_database():
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='CC14052024',
+        database='CulinaryCloud'
+    )
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM FoodInventoryI")
+    ingredients = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('manage_inventory.html', ingredients=ingredients)
+
+@app.route('/add', methods=['POST'])
+def add_ingredient():
+    name = request.form.get('name')
+    type = request.form.get('type')
+    shipment_date = request.form.get('shipment_date')
+    expiration_date = request.form.get('expiration_date')
+    count = request.form.get('count')
+
+    logging.debug(f"Form Data: name={name}, type={type}, shipment_date={shipment_date}, expiration_date={expiration_date}, count={count}")
+
+    # Validate that required fields are not empty
+    if not name or not type or not shipment_date or not expiration_date or not count:
+        logging.error("Error: All fields are required")
+        return render_template('manage_inventory.html', error="All fields are required")
+
+    # Ensure count is a valid integer
+    try:
+        count = int(count)
+    except ValueError:
+        logging.error("Error: Count must be a valid integer")
+        return render_template('manage_inventory.html', error="Count must be a valid integer")
+
+    # Validate date format
+    try:
+        from datetime import datetime
+        datetime.strptime(shipment_date, '%Y-%m-%d')
+        datetime.strptime(expiration_date, '%Y-%m-%d')
+    except ValueError:
+        logging.error("Error: Invalid date format")
+        return render_template('manage_inventory.html', error="Invalid date format")
+
+    try:
+        connection = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='CC14052024',
+            database='CulinaryCloud'
+        )
+        cursor = connection.cursor()
+        query = """
+        INSERT INTO FoodInventoryI (item_name, quantity, unit, expiration_date)
+        VALUES (%s, %s, %s, %s)
+        """
+        values = (name, count, type, expiration_date)
+        cursor.execute(query, values)
+        connection.commit()
+        cursor.close()
+        connection.close()
+    except mysql.connector.Error as err:
+        logging.error(f"Database error: {err}")
+        return render_template('manage_inventory.html', error=f"Database error: {err}")
+
+    return redirect(url_for('show_database'))
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)

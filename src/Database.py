@@ -3,11 +3,8 @@ from mysql.connector import Error
 from helpers import validate_employee_id
 from flask_sqlalchemy import SQLAlchemy
 
-<<<<<<< HEAD
-=======
 db = SQLAlchemy()
 
->>>>>>> 310b1bc (updated version)
 def create_database(connection, db_name):
     cursor = connection.cursor()
     cursor.execute(f"SHOW DATABASES LIKE '{db_name}';")
@@ -42,7 +39,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            passwd=user_password,
+            passwd='CC14052024',
             database=db_name
         )
         print("MySQL Database connection successful")
@@ -54,9 +51,9 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
 class Database:
 
     # Creates class variables regarding the database and connection to SQL
-    connection = create_server_connection("localhost", "root", 'CSC322Wei')
+    connection = create_server_connection("localhost", "root", 'CC14052024')
     database = create_database(connection, 'CulinaryCloud')
-    connection = create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud')
+    connection = create_server_connection("localhost", "root", 'CC14052024', 'CulinaryCloud')
 
     def execute_query(self, query, returnFlag=False):
 
@@ -372,16 +369,14 @@ def execute_query(self, query):
         print(f"Error during query execution: {err}")
         raise
 
-<<<<<<< HEAD
-=======
 def add_quality_issue(self, description, reported_by, date_reported):
-        add_issue_query = """
-        INSERT INTO QualityIssues (description, reported_by, date_reported) 
-        VALUES (%s, %s, %s);
-        """
-        data = (description, reported_by, date_reported)
-        self.execute_query(add_issue_query, data)
-        print("Quality issue added successfully")
+    add_issue_query = """
+    INSERT INTO QualityIssues (description, reported_by, date_reported) 
+    VALUES (%s, %s, %s);
+    """
+    data = (description, reported_by, date_reported)
+    self.execute_query(add_issue_query, data)
+    print("Quality issue added successfully")
 
 def execute_query(self, query, data=None):
         cursor = self.connection.cursor()
@@ -405,6 +400,5 @@ def get_all_employees(self):
         print("Error fetching employees:", e)
         return []
 
->>>>>>> 310b1bc (updated version)
 # Deletes database at the end
 #delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
