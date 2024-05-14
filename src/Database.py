@@ -1,10 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
-<<<<<<< HEAD
 from helpers import validate_employee_id
-=======
 from datetime import date
->>>>>>> 582d11e (Added ingredients complaint feature)
 
 def create_database(connection, db_name):
     cursor = connection.cursor()
@@ -389,8 +386,8 @@ class Customer (Database):
 # Add Customer using their first name, last name, email, password, and birthday
     def addCustomer (self, first_name, last_name, email, password_hash, birthday):
         
-        AddCustomer = f"INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
-                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"
+        AddCustomer = f"""INSERT INTO Customer (first_name, last_name, paymentInfo, vip, warnings, orders, email, password, birthday)
+                                    VALUES ('{first_name}', '{last_name}', 0, FALSE, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
         self.execute_query(AddCustomer)
         print("Customer Added")
 # Remove a customer with a certain ID
@@ -448,5 +445,56 @@ def execute_query(self, query):
         print(f"Error during query execution: {err}")
         raise
 
-# Deletes database at the end
-#delete_database(create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
+class Feedback (Database):
+
+    currentFeedbackID = 0
+
+    def __init__ (self):
+
+        self.createTable()
+
+    def createTable (self):
+
+        """
+        Function that creates table for Feedback
+        """
+
+        CreateTableFeedbackString = """
+            CREATE TABLE IF NOT EXISTS Feedback (
+            complaintID INT PRIMARY KEY,
+            personComplainingID INT,
+            personAccusedID INT,
+            feedbackType VARCHAR(40),
+            complaintDate DATE,
+            complaintText TEXT(500)
+            );
+            """
+        
+        self.execute_query(CreateTableFeedbackString)
+
+    def addFeedback (self, personComplainingID, personAccusedID, feedbackType, feedbackText):
+        
+        """
+        Function that adds a given complaint or praise to the database
+        """
+
+        Feedback.currentFeedbackID += 1
+        currentDate = date.today()
+
+        insertFeedbackString = f"INSERT INTO Feedback VALUES ({Feedback.currentFeedbackID}, {personComplainingID}, {personAccusedID}, '{feedbackType}', '{currentDate}', '{feedbackText}');"
+        self.execute_query(insertFeedbackString)
+
+        self.printTable()
+
+    def printTable (self):
+
+        cursor = Database.connection.cursor(buffered=True)
+        cursor.execute("SELECT * FROM Feedback") 
+
+        # fetch all the matching rows 
+        result = cursor.fetchall() 
+  
+        # loop through the rows 
+        for row in result: 
+            print(row, '\n')
+

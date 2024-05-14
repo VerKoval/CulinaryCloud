@@ -6,7 +6,9 @@ import os
 from werkzeug.security import generate_password_hash
 import mysql.connector
 from mysql.connector import Error
+import Database
 from Database import UserManagement
+from Database import Menu
 from flask_bcrypt import Bcrypt
  # app.py
 from helpers import validate_employee_id
@@ -22,6 +24,9 @@ db_connection = create_server_connection("localhost", "root", 'CSC322Wei', 'Culi
 user_management = UserManagement(db_connection)
 user_management.create_user_table()  # Creates customer table
 user_management.create_employee_table()  # Creates employee table
+
+# Initializes menu database connection object
+menu_db = Menu()
 
 
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
@@ -205,6 +210,22 @@ def register_customer():
 def customer_success_page():
     return render_template('customer_success.html')
 
+@app.route('/view_menu')
+def view_menu():
+
+    # Creates Menu database and populates it
+    M = Menu()
+    M.addDish('Salad',['Lettuce,Tomatoes'], 10)
+    M.addDish('Sandwich',['Bread,Lettuce'], 15)
+    M.printTable()
+
+    # menuItems = ['Sandwich']
+    # chef1.setCurrentMenu(menuItems)
+
+    # Actual running code
+    menuItems = menu_db.getDishes()
+    print(menuItems)
+    return render_template('view_menu.html', menuItems=menuItems)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)

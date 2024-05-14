@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Menu Items     </h1>
+
+    <table border="1">
+        <br>
+        <tr>
+            <th>Dish Name</th>
+            <th>Ingredients</th>
+            <th>Price</th>
+        </tr>
+        {% for dish in menuItems %}
+        <tr>
+            <td>{{ dish[0] }}</td>
+            <td>{{ dish[1] }}</td>
+            <td>{{ dish[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
