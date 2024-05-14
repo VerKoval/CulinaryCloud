@@ -52,68 +52,27 @@ class Chef:
         # Adds feedback using feedback function
         feedbackDB.addFeedback(self.ID, accusedID, 'IngredientQuality', complaintText)
 
-    # def setCurrentMenu (self, menuItems):
+    def setCurrentMenu (self, newMenuItems):
 
-    #     """
-    #     Function that takes in a list of menu items and sets that as the current menu (one in use)
-    #     """
+        """
+        Function that takes in a list of menu items and sets that as the current menu (one in use)
+        """
 
-    #     menuDB = Menu()
+        menuDB = Menu()
 
-    #     for dish in menuItems:
-    #         if menuDB.checkIfPresent(dish) == True:
-    #             if menuDB.checkIfInUse(dish) == False:
-    #                 Menu.addToCurrentDishes()
-    #         else:
-    #             print('Entered a dish that does not exist')
-    #             return
-                
-    
-# #Use Case 3 (Raise Quality Issue): Pseudo code  
-# # Classes and functions to handle quality issues for a food importer
-# // Main Program
-# Start Program
-#     Initialize complaints queue
-#     While program is running:
-#         Listen for new complaints
-#         If new complaint received:
-#             AddComplaintToQueue(newComplaint)
-#         If management requests view:
-#             DisplayComplaintsQueue()
-#     End While
-# End Program
+        menuDishes = menuDB.getDishes()
 
-# // Function to add a new complaint to the queue
-# Function AddComplaintToQueue(complaint)
-#     // Extract complaint details
-#     complaintType = complaint.getType()
-#     complaintSeverity = complaint.getSeverity()
-#     complaintDate = GetCurrentDate()
-#     // Create a structured complaint object
-#     newComplaint = {
-#         Type: complaintType,
-#         Severity: complaintSeverity,
-#         DateCreated: complaintDate
-#     }
-#     // Add the complaint to the queue with severity as priority
-#     complaintsQueue.insertWithPriority(newComplaint, complaintSeverity)
-#     Display message "Complaint added successfully with severity level: " + complaintSeverity
+        for dish in menuDishes:
 
-# // Function to display the complaints queue
-# Function DisplayComplaintsQueue()
-#     If complaintsQueue is not empty:
-#         For each complaint in complaintsQueue:
-#             Display "Type: " + complaint.Type
-#             Display "Severity: " + complaint.Severity
-#             Display "Date Created: " + complaint.DateCreated
-#     Else:
-#         Display "No current complaints."
+            if dish[0] not in newMenuItems:
+                menuDB.removeFromCurrentDishes(dish[0])
 
-# // Utility function to get current date
-# Function GetCurrentDate()
-#     // This would typically interface with the system's clock
-#     Return system.currentDate()
-
+        for dish in newMenuItems:
+            if menuDB.checkIfPresent(dish) == True:
+                menuDB.addToCurrentDishes(dish)
+            else:
+                print('Entered a dish that does not exist')
+                return
 
 # #Use Case 4 (Decide Menu): Pseudo code
 # // Main Program

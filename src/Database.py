@@ -173,6 +173,7 @@ class Menu (Database):
             CREATE TABLE Menu (
             dish CHAR(16) PRIMARY KEY,
             ingredientsList VARCHAR(40),
+            price INT,
             inUse INT
             );
             """
@@ -200,7 +201,7 @@ class Menu (Database):
         else:
             return True
 
-    def addDish (self, dishName, ingredientsList):
+    def addDish (self, dishName, ingredientsList, price):
 
         """
         Function that adds a dish to the Menu database
@@ -211,7 +212,7 @@ class Menu (Database):
         for ingredient in ingredientsList:
             ingredientsListString += f'{ingredient},'
         
-        insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', 1);"
+        insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', {price}, 1);"
         self.execute_query(insertIngredientString)
 
     def removeFromCurrentDishes (self, dishName):
@@ -259,6 +260,36 @@ class Menu (Database):
         ingredientsList.remove('')
 
         return ingredientsList
+    
+    def getPrice (self, dishName):
+
+        """
+        Function that retrieves the price for a particular menu item
+        """
+
+        getPriceString = f"""
+                            SELECT price
+                            FROM Menu
+                            WHERE dish = '{dishName}';
+                            """
+        
+        priceValue = self.execute_query(getPriceString, returnFlag=True)[0][0]
+        return priceValue
+    
+    def getDishes (self):
+
+        """
+        Gets dish names of all the dishes in the Menu that are currently active
+        """
+
+        getDishesString = f"""
+                            SELECT dish, ingredientsList, price
+                            FROM Menu
+                            WHERE inUse = 1;
+                            """
+        
+        dishesInfo = self.execute_query(getDishesString, returnFlag=True)
+        return dishesInfo
 
     def printTable (self):
 
