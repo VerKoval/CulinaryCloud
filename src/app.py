@@ -499,5 +499,27 @@ def process_order_button():
 
     return redirect(url_for('chef_home_page'))
 
+@app.route('/set_menu', methods=('GET', 'POST'))
+def set_menu():
+    return render_template('set_menu.html')
+
+@app.route('/set_menu_button', methods=('GET','POST'))
+def set_menu_button():
+
+    dish1 = request.form['dishName1']
+    dish2 = request.form['dishName2']
+    dish3 = request.form['dishName3']
+    dish4 = request.form['dishName4']
+    dish5 = request.form['dishName5']
+
+    menu_db.addToCurrentDishes(dish1)
+    menu_db.addToCurrentDishes(dish2)
+    menu_db.addToCurrentDishes(dish3)
+    menu_db.addToCurrentDishes(dish4)
+    menu_db.addToCurrentDishes(dish5)
+    menu_db.printTable()
+
+    return redirect(url_for('chef_home_page'))
+
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
