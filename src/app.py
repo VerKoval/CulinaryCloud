@@ -179,7 +179,7 @@ def register_importer():
         user_management.add_employee(first_name, last_name, email, password_hash, birthday, role='food_importer', employee_id=employee_id)
 
         # Redirect to a success page after registration
-        return redirect(url_for('foodimpoter_home_page.html'))
+        return redirect(url_for('food_importer_home_page'))
 
     except Exception as e:
         # Catching and printing any errors that occur during registration
@@ -443,6 +443,15 @@ def view_menu():
     menuItems = menu_db.getDishes()
     print(menuItems)
     return render_template('view_menu.html', menuItems=menuItems)
+
+
+@app.route('/delivery_orders')
+def delivery_orders():
+    return render_template('delivery_orders.html')
+
+@app.route('/delivery_history')
+def delivery_history():
+    return render_template('delivery_history.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
