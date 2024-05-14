@@ -444,5 +444,9 @@ def view_menu():
     print(menuItems)
     return render_template('view_menu.html', menuItems=menuItems)
 
+@app.route('/manage_reviews')
+def quality_issues():
+    return render_template('manage_reviews.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
