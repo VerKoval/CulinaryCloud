@@ -41,7 +41,8 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            passwd='CC14052024',
+            # passwd='CC14052024',
+            passwd='aleika',
             database=db_name
         )
         print("MySQL Database connection successful")
@@ -52,6 +53,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
 
 class Database:
     # Creates class variables regarding the database and connection to SQL
+    password = 'aleika'
     connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
     connection = create_server_connection("localhost", "root", password, 'CulinaryCloud')
