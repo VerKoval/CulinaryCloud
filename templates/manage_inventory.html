@@ -1,17 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingredient Database</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            text-align: center; 
+            background-color: #f8f2eb; /* Set background color */
+        }
+        h1 {
+            text-align: center; 
+            margin-top: 20px; 
+        }
+        table {
+            margin: auto; 
+            width: 80%; 
+            margin-top: 20px; 
+        }
+        form {
+            display: inline-block; 
+            text-align: left; 
+            margin-right: 50px; 
+            margin-bottom: 20px; 
+        }
+    </style>
 </head>
 <body>
-    <h1>Ingredient Database</h1>
-    {% if error %}
-        <div style="color: red;">{{ error }}</div>
-    {% endif %}
+ <h1>Ingredient Database</h1>
+<form action="/add" method="post">
+        <h2>Add New Ingredient</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+        <label for="type">Type:</label>
+        <input type="text" id="type" name="type"><br>
+        <label for="shipment_date">Shipment Date:</label>
+        <input type="date" id="shipment_date" name="shipment_date"><br>
+        <label for="expiration_date">Expiration Date:</label>
+        <input type="date" id="expiration_date" name="expiration_date"><br>
+        <label for="count">Count:</label>
+        <input type="number" id="count" name="count"><br>
+        <button type="submit">Add Ingredient</button>
+    </form>
     <table>
         <thead>
             <tr>
@@ -24,37 +55,133 @@
             </tr>
         </thead>
         <tbody>
-            {% for ingredient in ingredients %}
             <tr>
-                <td>{{ ingredient.item_name }}</td>
-                <td>{{ ingredient.unit }}</td>
-                <td>{{ ingredient.shipment_date }}</td>
-                <td>{{ ingredient.expiration_date }}</td>
-                <td>{{ ingredient.quantity }}</td>
+                <td>Flour</td>
+                <td>Grain</td>
+                <td>2024-04-01</td>
+                <td>2024-10-01</td>
+                <td>100</td>
                 <td>
-                    <button type="button" onclick="alert('Count: {{ ingredient.quantity }}')">Show Count</button>
+                    <button type="button" onclick="alert('Count: 100')">Edit Count</button>
                     <form action="/delete" method="post">
-                        <input type="hidden" name="item_id" value="{{ ingredient.item_id }}">
+                        <input type="hidden" name="name" value="Flour">
                         <button type="submit">Delete</button>
                     </form>
                 </td>
             </tr>
-            {% endfor %}
+            <tr>
+                <td>Sugar</td>
+                <td>Sweetener</td>
+                <td>2024-05-01</td>
+                <td>2024-11-01</td>
+                <td>200</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>Milk</td>
+                <td>Dairy</td>
+                <td>2024-05-01</td>
+                <td>2024-07-03</td>
+                <td>75</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+	<tr>
+                <td>Cheddar</td>
+                <td>Dairy</td>
+                <td>2024-04-01</td>
+                <td>2024-11-20</td>
+                <td>147</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+	<tr>
+                <td>Rice</td>
+                <td>Grain</td>
+                <td>2024-03-01</td>
+                <td>2024-12-10</td>
+                <td>220</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+<tr>
+                <td>Pasta</td>
+                <td>Grain</td>
+                <td>2024-05-01</td>
+                <td>2024-11-12</td>
+                <td>178</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+<tr>
+                <td>Cashew</td>
+                <td>Nuts</td>
+                <td>2024-04-01</td>
+                <td>2024-07-21</td>
+                <td>45</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+<tr>
+                <td>Almonds</td>
+                <td>Nuts</td>
+                <td>2024-05-01</td>
+                <td>2024-08-23</td>
+                <td>45</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+	<tr>
+                <td>Camembert</td>
+                <td>Dairy</td>
+                <td>2024-03-01</td>
+                <td>2024-12-13</td>
+                <td>113</td>
+                <td>
+                    <button type="button" onclick="alert('Count: 200')">Edit Count</button>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="name" value="Sugar">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
         </tbody>
     </table>
-    <form action="/add" method="post">
-        <h2>Add New Ingredient</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="Milk" required><br>
-        <label for="type">Type:</label>
-        <input type="text" id="type" name="type" value="Dairy" required><br>
-        <label for="shipment_date">Shipment Date:</label>
-        <input type="date" id="shipment_date" name="shipment_date" value="2024-05-13" required><br>
-        <label for="expiration_date">Expiration Date:</label>
-        <input type="date" id="expiration_date" name="expiration_date" value="2024-06-13" required><br>
-        <label for="count">Count:</label>
-        <input type="number" id="count" name="count" value="10" required><br>
-        <button type="submit">Add Ingredient</button>
-    </form>
-</body>
+    </body>
 </html>
