@@ -52,7 +52,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
 
 class Database:
     # Creates class variables regarding the database and connection to SQL
-    password = 'CSC322Wei'
+    password = 'CC14052024'
     connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
     connection = create_server_connection("localhost", "root", password, 'CulinaryCloud')

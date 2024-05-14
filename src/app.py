@@ -23,7 +23,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 static_dir = os.path.join(project_root, 'static')
 template_dir = os.path.join(project_root, 'templates')
 # Assuming this is part of your main script or initialization routine
-db_connection = create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud')
+db_connection = create_server_connection("localhost", "root", 'CC14052024', 'CulinaryCloud')
 user_management = UserManagement(db_connection)
 user_management.create_user_table()  # Creates customer table
 user_management.create_employee_table()  # Creates employee table
@@ -35,7 +35,7 @@ menu_db = Menu()
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
 bcrypt = Bcrypt(app)
 user_management = UserManagement(db_connection)
-app.config['SECRET_KEY'] = 'KEYCSC322Wei'
+app.config['SECRET_KEY'] = 'KEYCC14052024'
 
 @app.route('/')
 def front_page():
@@ -285,7 +285,7 @@ def handle_quality_issue():
 
 @app.route('/manage_staff')
 def manage_staff():
-    connection = mysql.connector.connect(host='localhost', user='root', password='CSC322Wei', database='CulinaryCloud')
+    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM Employees")
     employees = cursor.fetchall()
@@ -303,7 +303,7 @@ def add_employee():
     birthday = request.form['birthday']
     role = request.form['role']
 
-    connection = mysql.connector.connect(host='localhost', user='root', password='CSC322Wei', database='CulinaryCloud')
+    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
     cursor = connection.cursor()
     query = """
     INSERT INTO Employees (employee_id, first_name, last_name, email, password, birthday, role)
@@ -322,7 +322,7 @@ def manage_customers():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CSC322Wei',
+        password='CC14052024',
         database='CulinaryCloud'
     )
     cursor = connection.cursor(dictionary=True)
@@ -343,7 +343,7 @@ def add_customer():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CSC322Wei',
+        password='CC14052024',
         database='CulinaryCloud'
     )
     cursor = connection.cursor()
@@ -367,7 +367,7 @@ def show_database():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CSC322Wei',
+        password='CC14052024',
         database='CulinaryCloud'
     )
     cursor = connection.cursor(dictionary=True)
@@ -412,7 +412,7 @@ def add_ingredient():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='CSC322Wei',
+            password='CC14052024',
             database='CulinaryCloud'
         )
         cursor = connection.cursor()
