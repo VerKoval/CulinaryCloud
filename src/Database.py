@@ -308,7 +308,7 @@ class Menu (Database):
                             WHERE dish = '{dishName}';
                             """
         
-        priceValue = self.execute_query(getPriceString, returnFlag=True)[0][0]
+        priceValue = self.execute_query(getPriceString, returnFlag=True)
         return priceValue
     
     def getDishes (self):

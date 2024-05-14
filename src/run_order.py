@@ -33,5 +33,5 @@ orderTest1.distributeToChef()
 orderTestVIP.validateIngredientsAndAddToQueue()
 orderTestVIP.distributeToChef()
 
-# Deletes database at the end (to refresh everything)
-Database.delete_database(Database.create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
+# # Deletes database at the end (to refresh everything)
+# Database.delete_database(Database.create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud'),'CulinaryCloud')
