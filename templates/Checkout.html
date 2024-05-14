@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Options</title>
+</head>
+<body>
+    <h1>Order Options</h1>
+    <form id="order-form">
+        <label for="order-type">Choose order type:</label>
+        <select id="order-type" name="order-type">
+            <option value="eat-in-store">Eat in store</option>
+            <option value="pick-up">Pick up</option>
+            <option value="delivery">Delivery</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="price-info"></p>
+
+    <button id="done-button">Done?</button>
+    
+    <p>Price is $35</p>
+
+    <script>
+        const doneButton = document.getElementById('done-button');
+    
+        doneButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/checkout', {
+                    method: 'POST'
+                });
+    
+                if (response.ok) {
+                    console.log('Checkout successful');
+                    // Redirect to the customer home page
+                    window.location.href = '/customer_home_page'; 
+                } else {
+                    console.error('Error during checkout:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error during checkout:', error.message);
+            }
+        });
+    </script>
+</body>
+</html>

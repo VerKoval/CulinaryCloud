@@ -2,23 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to CulinaryCloud</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>CulinaryCloud Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Link to your CSS file for styling -->
 </head>
 <body>
-    <div class="top-right">
-        <a href="/logout" class="login-button">Logout</a>
-    </div>
+<header>
+    <h1>CulinaryCloud Menu</h1>
+    <p>Authentic cuisine delivered to your door. Order on the web!</p>
+    <p>
+        Cart: <span id="cart-count">{{ cart_count }}</span> 
+        <a href="/checkout" class="checkout-button">Checkout</a> <!-- Link to the checkout page -->
+    </p>
+</header>
+<main>
+    <section id="pizzas">
+        <h2 style="font-size: 16px;">Pizza A Legna<span class="rating" style="font-size: 12px;"></span></h2>
+        <ul>
+            <li>New Haven - Tomato Sauce, Fresh Mozzarella, Basil, Pecorino - $16.00 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Pizza with Fired Green Tomatoes - Lightly battered, sliced when available, Napoletana style - $20.00 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Other Pizzas...</li>
+        </ul>
+    </section>
+    <section id="paninis">
+        <h2>Panini / Subs<span class="rating"></span></h2>
+        <ul>
+            <li>Italian Cheese Steak - Natural steak, onion, fresh pepper, mozzarella, marinara sauce with squeeze mushroom - $9.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Chicken Panini - Shredded chicken with mozzarella served on lightly toasted brown bread and homemade Béchamel sauce - $11.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Other Paninis...</li>
+        </ul>
+    </section>
+    <section id="insalate">
+        <h2>Insalate<span class="rating"></span></h2>
+        <ul>
+            <li>Spinach Salad - Apples, local farm's apple cider dressing - $9.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Caprese Salad - Ripe tomato with fresh mozzarella and basil - $7.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Other Salads...</li>
+        </ul>
+    </section>
+    <section id="specialty">
+        <h2>Specialty<span class="rating"></span></h2>
+        <ul>
+            <li>Antipasti - Artisanal cheeses, charcuterie, & roasted olives - $13.00 <button class="add-to-cart">Add to Cart</button></li>
+        </ul>
+    </section>
+    <section id="drinks">
+        <h2>Drinks<span class="rating"></span></h2>
+        <ul>
+            <li>Guinness - $6 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Old Fashioned - With NE rye whiskey, bitters, house made vermouth, Campari - $11 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Other Drinks...</li>
+        </ul>
+    </section>
+</main>
+<footer>
+    <p>log in and place your order!</p>
+</footer>
 
-    <div class="centered-content">
-        <h1>CulinaryCloud</h1>
-        <p class="welcome-text">Welcome</p>
-        <a href="/surfer_menu_page" class="view-menu-button">View Menu</a>
-    </div>
-    <footer>
-        <p>Copyright © 2024 CulinaryCloud</p>
-    </footer>
+<p>Cart: <span id="cart-count">{{ cart_count }}</span> <a href="/checkout" class="checkout-button">Checkout</a></p>
+<script>
+    // Function to generate a random star rating (1 to 5)
+    function generateRandomRating() {
+        return Math.floor(Math.random() * 5) + 1;
+    }
+
+    // Get all h2 elements and append a random star rating
+    var headings = document.querySelectorAll('h2');
+    headings.forEach(function(heading) {
+        var rating = generateRandomRating();
+        var stars = '★'.repeat(rating);
+        heading.querySelector('.rating').textContent = stars;
+    });
+
+    // Add event listener to each "Add to Cart" button
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            // Get current cart count
+            let cartCountElement = document.getElementById('cart-count');
+            let count = parseInt(cartCountElement.textContent);
+            // Increment cart count
+            cartCountElement.textContent = count + 1;
+        });
+    });
+</script>
+
 </body>
 </html>
-

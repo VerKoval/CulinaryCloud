@@ -7,7 +7,8 @@ from werkzeug.security import generate_password_hash
 import mysql.connector
 from mysql.connector import Error
 import Database
-from Database import UserManagement
+from Database import UserManagement, Customers
+from Customer import Customer
 from Database import Menu
 from flask_bcrypt import Bcrypt
  # app.py
@@ -29,6 +30,8 @@ user_management.create_quality_issue_table()  # Creates quality issue table
 
 # Initializes menu database connection object
 menu_db = Menu()
+cust = Customer("Bella", "Smith", 100, 100)
+
 
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
 bcrypt = Bcrypt(app)
@@ -59,10 +62,30 @@ def login():
 
     return render_template('login.html')
 
+#cart_count = cust.numCart()
+
+@app.route('/add_to_cart', methods=['POST'])
+def add_item_to_cart():
+    #global cart_count
+    try:
+        # Get item name from request data
+        item_name = request.json.get('item')
+        
+        # Place order using Customer object
+        cust.placeOrder(item_name)
+        
+        # Get number of items in the cart
+        cart_count = cust.numCart()
+        
+        return render_template('customer_home_page.html', cart_count=cart_count)
+    except Exception as e:
+        return str(e), 500
+
+
 @app.route('/customer_home_page')
 def customer_home_page():
     # This will render a generic customer home page
-    return render_template('customer_home_page.html')
+    return render_template('customer_home_page.html', cart_count=cust.numCart())
 
 @app.route('/chef_home_page')
 def chef_home_page():
@@ -242,6 +265,27 @@ def register_customer():
     
     # Redirect to customer success page
     return redirect(url_for('customer_home_page'))
+
+@app.route('/get_price', methods=['POST'])
+def get_price():
+    # Retrieve order type from request
+    order_type = request.json.get('orderType')
+
+    # Calculate price using Customer class
+    price = cust.cartPrices()  # You'll need to implement this function
+
+    # Return price as text
+    return str(price)
+
+
+@app.route('/checkout')
+def checkout():
+    # Call Customer checkout function
+    cust.checkout()  # Assuming 'cust' is an instance of the Customer class
+
+    price = cust.cartPrices()
+    # Optionally, you can return a response indicating success
+    return render_template('Checkout.html', price = price)
 
 @app.route('/surfer_menu_page')
 def surfer_menu():
