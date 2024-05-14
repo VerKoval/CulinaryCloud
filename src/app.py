@@ -9,6 +9,7 @@ from mysql.connector import Error
 import Database
 from Database import UserManagement
 from Database import Menu
+from Chef import Chef
 from flask_bcrypt import Bcrypt
  # app.py
 from helpers import validate_employee_id
@@ -33,7 +34,7 @@ menu_db = Menu()
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
 bcrypt = Bcrypt(app)
 user_management = UserManagement(db_connection)
-app.config['SECRET_KEY'] = 'KEYCC14052024'
+app.config['SECRET_KEY'] = 'KEYCSC322Wei'
 
 @app.route('/')
 def front_page():
@@ -54,6 +55,8 @@ def login():
             return redirect(url_for('food_importer_home_page'))
         elif email == 'clarabowts@gmail.com' and password == 'cbttpdts':
             return redirect(url_for('manager_home_page'))
+        elif email == 'bobbyflay@gmail.com' and password == 'cooking':
+            return redirect(url_for('chef_home_page'))
         else:
             return render_template('login.html', error="Invalid email or password. Please try again.")
 
@@ -281,7 +284,7 @@ def handle_quality_issue():
 
 @app.route('/manage_staff')
 def manage_staff():
-    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
+    connection = mysql.connector.connect(host='localhost', user='root', password='CSC322Wei', database='CulinaryCloud')
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM Employees")
     employees = cursor.fetchall()
@@ -299,7 +302,7 @@ def add_employee():
     birthday = request.form['birthday']
     role = request.form['role']
 
-    connection = mysql.connector.connect(host='localhost', user='root', password='CC14052024', database='CulinaryCloud')
+    connection = mysql.connector.connect(host='localhost', user='root', password='CSC322Wei', database='CulinaryCloud')
     cursor = connection.cursor()
     query = """
     INSERT INTO Employees (employee_id, first_name, last_name, email, password, birthday, role)
@@ -318,7 +321,7 @@ def manage_customers():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CC14052024',
+        password='CSC322Wei',
         database='CulinaryCloud'
     )
     cursor = connection.cursor(dictionary=True)
@@ -339,7 +342,7 @@ def add_customer():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CC14052024',
+        password='CSC322Wei',
         database='CulinaryCloud'
     )
     cursor = connection.cursor()
@@ -363,11 +366,11 @@ def show_database():
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='CC14052024',
+        password='CSC322Wei',
         database='CulinaryCloud'
     )
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM FoodInventoryI")
+    cursor.execute("SELECT * FROM FoodInventory")
     ingredients = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -408,7 +411,7 @@ def add_ingredient():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='CC14052024',
+            password='CSC322Wei',
             database='CulinaryCloud'
         )
         cursor = connection.cursor()
@@ -430,19 +433,27 @@ def add_ingredient():
 @app.route('/view_menu')
 def view_menu():
 
-    # Creates Menu database and populates it
-    M = Menu()
-    M.addDish('Salad',['Lettuce,Tomatoes'], 10)
-    M.addDish('Sandwich',['Bread,Lettuce'], 15)
-    M.printTable()
-
-    # menuItems = ['Sandwich']
-    # chef1.setCurrentMenu(menuItems)
-
     # Actual running code
     menuItems = menu_db.getDishes()
-    print(menuItems)
     return render_template('view_menu.html', menuItems=menuItems)
+
+@app.route('/add_dish', methods=('GET', 'POST'))
+def add_dish():
+    return render_template('add_dish.html')
+
+@app.route('/add_dish_button', methods=('GET','POST'))
+def add_dish_button():
+    dishName = request.form['dishName']
+    ingredientsList = request.form['ingredientsList']
+    price = request.form['price']
+
+    ingredientsList = ingredientsList.split(',')
+
+    menu_db.addDish(dishName, ingredientsList, price)
+    menu_db.printTable()
+    print(f'Successfully added: {dishName}')
+
+    return redirect(url_for('chef_home_page'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
