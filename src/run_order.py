@@ -7,23 +7,24 @@ A = Database.Inventory()
 A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
 A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
 A.addIngredient('Tomatoes','Vegetable',10,'2024-06-22')
+A.addIngredient('Chicken','Meat',5,'2024-06-18')
 A.addIngredient('Bread','Grain',1,'2024-06-30')
 A.printTable()
 
 # Creates Menu database and populates it
 M = Database.Menu()
-M.addDish('Salad',['Lettuce,Tomatoes'])
-M.addDish('Sandwich',['Bread,Lettuce'])
+M.addDish('Salad',['Lettuce,Tomatoes'], 10)
+M.addDish('Sandwich',['Bread,Lettuce'], 15)
 M.printTable()
 
 # Creates orders including one VIP Order
 orderTest1 = Order(123, 'Sandwich')
 orderTest2 = Order(124, 'Salad')
-orderTestVIP = Order(125, 'Special Salad', specialOrder=True, ingredients=['Lettuce','Tomatoes'])
+orderTestVIP = Order(125, 'Special Salad', specialOrder=True, specialIngredients=['Lettuce','Tomatoes','Chicken'], specialPrice=30)
 
 # Creates Chefs to make the orders
-chef1 = Chef(1001, 'John Smith', 50000)
-chef2 = Chef(1002, 'Rosalyn Franklin', 50000)
+chef1 = Chef('John Smith', 50000)
+chef2 = Chef('Rosalyn Franklin', 50000)
 
 # Runs validation of ingredients, adds to queue, and then distributes each order to an available chef
 orderTest1.validateIngredientsAndAddToQueue()
