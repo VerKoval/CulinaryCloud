@@ -5,11 +5,10 @@ from Chef import Chef
 from Database import Customers, Menu, Feedback
 from Order import Order
 
-class Customers:
+class Customer:
 
-    # Stores queue of all order objects that are created
-    cartQueue = Queue(maxsize = 50)
-    cartPrice = 0
+    cartQueue = Queue(maxsize = 50) #Just names of items being put in cart
+    cartPrice = 0 #Total price of items in cart
     Cust = Customers()
 
     def __init__ (self, customerID, firstname, lastname, money, paymentInfo = 0, vip = False, warn=0, orders = 0, pressRatings = False):
@@ -24,59 +23,70 @@ class Customers:
         self.warnings = warn
         self.orders = orders
 
+        #if two warnings, delete customer
         if warn == 2:
             if not vip:
-                Customers.remove()
+                Customer.remove()
             else:
                 vip = False
-                Customers.Cust.demoteCustomer(self.ID)
+                Customer.Cust.demoteCustomer(self.ID)
 
         if not vip:
             if self.payInfo > 500 or self.orders > 50:
                 vip = True
-                Customers.Cust.promoteCustomer(self.ID)
+                Customer.Cust.promoteCustomer(self.ID)
 
+#place regular order
     def placeOrder(self, menuItem, checkout = False):
+        if not Customer.Cust.checkCustomer(self.ID): return #checks if customer
         MenuDB = Menu()
         if MenuDB.checkIfPresent(menuItem):
             discount = 0.9 if self.VIP else 1 #discount for vips
-            Customers.cartPrice += discount*MenuDB.getPrice(menuItem)
-            Customers.cartQueue.put(menuItem)
+            Customer.cartPrice += discount*MenuDB.getPrice(menuItem)
+            Customer.cartQueue.put(menuItem)
             if checkout:
-                Customers.checkout()
+                Customer.checkout()
 
+#process all items on queue and make the transaction
     def checkout(self):
-        while not Customers.cartQueue.empty():
-            if Customers.cartPrice <= self.money:
-                item = Customers.cartQueue.get()
+        if not Customer.Cust.checkCustomer(self.ID): return
+        while not Customer.cartQueue.empty():
+            if Customer.cartPrice <= self.money:
+                item = Customer.cartQueue.get()
                 if item.endswith("special"):
                     order = Order(self.ID, item, specialOrder = True)
                 else:
                     order = Order(self.ID, item)
                 order.distributeToChef()
-                self.money -= Customers.cartPrice
-                Customers.Cust.addMoney(self.ID, -Customers.cartPrice)
-                return Customers.cartPrice
+                self.money -= Customer.cartPrice
+                Customer.Cust.addMoney(self.ID, -Customers.cartPrice)
+                return Customer.cartPrice
     
+    #allow customer to add money to their account
     def addMoney(self, add):
+        if not Customer.Cust.checkCustomer(self.ID): return
         self.money += add
-        Customers.Cust.addMoney(self.id, add)
+        Customer.Cust.addMoney(self.id, add)
 
+#delete customer from database
     def remove(self):
-        Customers.Cust.removeCustomer(self.ID)
+        if not Customer.Cust.checkCustomer(self.ID): return
+        Customer.Cust.removeCustomer(self.ID)
 
+#Negative feedback
     def Complain (self, accusedID, complaintText):
-
+        if not Customer.Cust.checkCustomer(self.ID): return
         # Creates feedback database table and connection
         feedbackDB = Feedback()
 
         # Adds feedback using feedback function
-        feedbackDB.addFeedback(self.ID, accusedID, 'Customer Comment', complaintText)
+        feedbackDB.addFeedback(self.ID, accusedID, 'Customer Complant', complaintText)
         if self.VIP:
-            feedbackDB.addFeedback(self.ID, accusedID, 'Customer Comment', complaintText) #vip feedback counted twice
+            feedbackDB.addFeedback(self.ID, accusedID, 'Customer Complaint', complaintText) #vip feedback counted twice
 
+#positive feedback
     def Compliment (self, accusedID, complaintText):
-
+        if not Customer.Cust.checkCustomer(self.ID): return
         # Creates feedback database table and connection
         feedbackDB = Feedback()
 
@@ -87,15 +97,18 @@ class Customers:
     
 
     #Rate the food
+    
     def giveRating (self, rating, item):
+        if not Customer.Cust.checkCustomer(self.ID): return
         menu = Menu()
         menu.addRating(item, rating)
 
     #special food
     def exclusiveOffer(self, item, price):
+        if not Customer.Cust.checkCustomer(self.ID): return
         item += "special"
-        Customers.cartQueue.put(item)
-        Customers.cartPrice += price
+        Customer.cartQueue.put(item)
+        Customer.cartPrice += price
 
     
 
