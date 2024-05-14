@@ -8,7 +8,7 @@ from Order import Order
 class Customers:
 
     # Stores queue of all order objects that are created
-    cartQueue = Queue(maxsize = 10)
+    cartQueue = Queue(maxsize = 50)
     cartPrice = 0
     Cust = Customers()
 
@@ -49,7 +49,10 @@ class Customers:
         while not Customers.cartQueue.empty():
             if Customers.cartPrice <= self.money:
                 item = Customers.cartQueue.get()
-                order = Order(self.ID, item)
+                if item.endswith("special"):
+                    order = Order(self.ID, item, specialOrder = True)
+                else:
+                    order = Order(self.ID, item)
                 order.distributeToChef()
                 self.money -= Customers.cartPrice
                 Customers.Cust.addMoney(self.ID, -Customers.cartPrice)
@@ -62,7 +65,7 @@ class Customers:
     def remove(self):
         Customers.Cust.removeCustomer(self.ID)
 
-    def raiseQualityIssue (self, accusedID, complaintText):
+    def Complain (self, accusedID, complaintText):
 
         # Creates feedback database table and connection
         feedbackDB = Feedback()
@@ -71,6 +74,30 @@ class Customers:
         feedbackDB.addFeedback(self.ID, accusedID, 'Customer Comment', complaintText)
         if self.VIP:
             feedbackDB.addFeedback(self.ID, accusedID, 'Customer Comment', complaintText) #vip feedback counted twice
+
+    def Compliment (self, accusedID, complaintText):
+
+        # Creates feedback database table and connection
+        feedbackDB = Feedback()
+
+        # Adds feedback using feedback function
+        feedbackDB.addFeedback(self.ID, accusedID, 'Customer Compliment', complaintText)
+        if self.VIP:
+            feedbackDB.addFeedback(self.ID, accusedID, 'Customer Compliment', complaintText) #vip feedback counted twice
+    
+
+    #Rate the food
+    def giveRating (self, rating, item):
+        menu = Menu()
+        menu.addRating(item, rating)
+
+    #special food
+    def exclusiveOffer(self, item, price):
+        item += "special"
+        Customers.cartQueue.put(item)
+        Customers.cartPrice += price
+
+    
 
     
 
