@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Dish</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Add New Dish to Menu</h2>
+    <form action="/add_dish_button" method="post">
+        Dish Name: <input type="text" name="dishName"><br>
+        Ingredients: <input type="text" name="ingredientsList"><br>
+        Price: <input type="text" name="price"><br>
+        <input type="submit" value="Add Dish">
+    </form>
+    <script>
+        function removeRow(rowId) {
+            var row = document.getElementById(rowId);
+            if (row) {
+                row.parentNode.removeChild(row);
+            }
+        }
+    </script>
+</body>
+</html>

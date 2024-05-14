@@ -41,8 +41,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            # passwd='CC14052024',
-            passwd='aleika',
+            password=user_password,
             database=db_name
         )
         print("MySQL Database connection successful")
@@ -53,7 +52,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
 
 class Database:
     # Creates class variables regarding the database and connection to SQL
-    password = 'aleika'
+    password = 'CC14052024'
     connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
     connection = create_server_connection("localhost", "root", password, 'CulinaryCloud')
@@ -178,8 +177,8 @@ class Menu (Database):
             dish CHAR(16) PRIMARY KEY,
             ingredientsList VARCHAR(40),
             price INT,
-            inUse INT
-            ratingSum INT
+            inUse INT,
+            ratingSum INT,
             ratingNumber INT
             );
             """
@@ -219,6 +218,7 @@ class Menu (Database):
             ingredientsListString += f'{ingredient},'
         
         insertIngredientString = f"INSERT INTO Menu VALUES ('{dishName}', '{ingredientsListString}', {price}, 1, 0, 0);"
+        print(insertIngredientString)
         self.execute_query(insertIngredientString)
 
     def removeFromCurrentDishes (self, dishName):
@@ -308,7 +308,7 @@ class Menu (Database):
                             WHERE dish = '{dishName}';
                             """
         
-        priceValue = self.execute_query(getPriceString, returnFlag=True)[0][0]
+        priceValue = self.execute_query(getPriceString, returnFlag=True)
         return priceValue
     
     def getDishes (self):
@@ -318,7 +318,7 @@ class Menu (Database):
         """
 
         getDishesString = f"""
-                            SELECT dish, ingredientsList, price
+                            SELECT dish, ingredientsList, price, ratingNumber
                             FROM Menu
                             WHERE inUse = 1;
                             """

@@ -9,6 +9,8 @@ from mysql.connector import Error
 import Database
 from Database import UserManagement
 from Database import Menu
+from Chef import Chef
+from Order import Order
 from flask_bcrypt import Bcrypt
  # app.py
 from helpers import validate_employee_id
@@ -21,7 +23,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 static_dir = os.path.join(project_root, 'static')
 template_dir = os.path.join(project_root, 'templates')
 # Assuming this is part of your main script or initialization routine
-db_connection = create_server_connection("localhost", "root", 'CSC322Wei', 'CulinaryCloud')
+db_connection = create_server_connection("localhost", "root", 'CC14052024', 'CulinaryCloud')
 user_management = UserManagement(db_connection)
 user_management.create_user_table()  # Creates customer table
 user_management.create_employee_table()  # Creates employee table
@@ -54,6 +56,8 @@ def login():
             return redirect(url_for('food_importer_home_page'))
         elif email == 'clarabowts@gmail.com' and password == 'cbttpdts':
             return redirect(url_for('manager_home_page'))
+        elif email == 'bobbyflay@gmail.com' and password == 'cooking':
+            return redirect(url_for('chef_home_page'))
         else:
             return render_template('login.html', error="Invalid email or password. Please try again.")
 
@@ -367,7 +371,7 @@ def show_database():
         database='CulinaryCloud'
     )
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM FoodInventoryI")
+    cursor.execute("SELECT * FROM FoodInventory")
     ingredients = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -430,20 +434,92 @@ def add_ingredient():
 @app.route('/view_menu')
 def view_menu():
 
-    # Creates Menu database and populates it
-    M = Menu()
-    M.addDish('Salad',['Lettuce,Tomatoes'], 10)
-    M.addDish('Sandwich',['Bread,Lettuce'], 15)
-    M.printTable()
-
-    # menuItems = ['Sandwich']
-    # chef1.setCurrentMenu(menuItems)
-
     # Actual running code
     menuItems = menu_db.getDishes()
-    print(menuItems)
     return render_template('view_menu.html', menuItems=menuItems)
 
+@app.route('/add_dish', methods=('GET', 'POST'))
+def add_dish():
+    return render_template('add_dish.html')
+
+@app.route('/add_dish_button', methods=('GET','POST'))
+def add_dish_button():
+    dishName = request.form['dishName']
+    ingredientsList = request.form['ingredientsList']
+    price = request.form['price']
+
+    ingredientsList = ingredientsList.split(',')
+
+    menu_db.addDish(dishName, ingredientsList, price)
+    menu_db.printTable()
+    print(f'Successfully added: {dishName}')
+
+    return redirect(url_for('chef_home_page'))
+
+@app.route('/process_order', methods=('GET', 'POST'))
+def process_order():
+
+    # # Creates inventory database and populates it
+    # A = Database.Inventory()
+    # A.addIngredient('Lettuce','Vegetable',2,'2024-06-20')
+    # A.addIngredient('Lettuce','Vegetable',5,'2024-06-21')
+    # A.addIngredient('Tomatoes','Vegetable',10,'2024-06-22')
+    # A.addIngredient('Chicken','Meat',5,'2024-06-18')
+    # A.addIngredient('Bread','Grain',1,'2024-06-30')
+    # A.printTable()
+
+    # # Creates Menu database and populates it
+    # M = Database.Menu()
+    # M.addDish('Salad',['Lettuce,Tomatoes'], 10)
+    # M.addDish('Sandwich',['Bread,Lettuce'], 15)
+    # M.printTable()
+
+    # orderTest1 = Order(123, 'Sandwich')
+    # orderTest2 = Order(124, 'Salad')
+    # orderTestVIP = Order(125, 'Special Salad', specialOrder=True, specialIngredients=['Lettuce','Tomatoes','Chicken'], specialPrice=30)
+
+    # orderTest1.validateIngredientsAndAddToQueue()
+    # orderTest2.validateIngredientsAndAddToQueue()
+    # orderTestVIP.validateIngredientsAndAddToQueue()
+
+    orders = []
+    for item in Order.orderQueue.queue:
+        orders.append(item)
+
+    print(orders)
+    print(list(Order.orderQueue.queue))
+
+    return render_template('process_order.html', orders=orders)
+
+@app.route('/process_order_button', methods=('GET','POST'))
+def process_order_button():
+
+    chef = Chef('Bobby Flay',50000)
+    chef.prepareOrder(Order.orderQueue)
+
+    return redirect(url_for('chef_home_page'))
+
+@app.route('/set_menu', methods=('GET', 'POST'))
+def set_menu():
+    return render_template('set_menu.html')
+
+@app.route('/set_menu_button', methods=('GET','POST'))
+def set_menu_button():
+
+    dish1 = request.form['dishName1']
+    dish2 = request.form['dishName2']
+    dish3 = request.form['dishName3']
+    dish4 = request.form['dishName4']
+    dish5 = request.form['dishName5']
+
+    menu_db.addToCurrentDishes(dish1)
+    menu_db.addToCurrentDishes(dish2)
+    menu_db.addToCurrentDishes(dish3)
+    menu_db.addToCurrentDishes(dish4)
+    menu_db.addToCurrentDishes(dish5)
+    menu_db.printTable()
+
+    return redirect(url_for('chef_home_page'))
 
 @app.route('/delivery_orders')
 def delivery_orders():
