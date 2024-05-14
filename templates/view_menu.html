@@ -13,12 +13,14 @@
             <th>Dish Name</th>
             <th>Ingredients</th>
             <th>Price</th>
+            <th>Rating Number</th>
         </tr>
         {% for dish in menuItems %}
         <tr>
             <td>{{ dish[0] }}</td>
             <td>{{ dish[1] }}</td>
             <td>{{ dish[2] }}</td>
+            <td>{{ dish[3] }}</td>
         </tr>
         {% endfor %}
     </table>

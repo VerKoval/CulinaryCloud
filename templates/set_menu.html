@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Set Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Updates dish names to menu:</h2>
+    <form action="/set_menu_button" method="post">
+        Dish Name 1: <input type="text" name="dishName1"><br>
+        Dish Name 2: <input type="text" name="dishName2"><br>
+        Dish Name 3: <input type="text" name="dishName3"><br>
+        Dish Name 4: <input type="text" name="dishName4"><br>
+        Dish Name 5: <input type="text" name="dishName5"><br>
+        <input type="submit" value="Add Dishes to Current Menu">
+    </form>
+</body>
+</html>
