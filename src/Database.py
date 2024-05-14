@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
-from datetime import date
 from helpers import validate_employee_id
+from datetime import date
 
 def create_database(connection, db_name):
     cursor = connection.cursor()
