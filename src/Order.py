@@ -9,7 +9,7 @@ class Order:
     # Stores queue of all order objects that are created
     orderQueue = Queue(maxsize = 10)
 
-    def __init__ (self, customerID, dishName, ingredients=None, specialOrder=False):
+    def __init__ (self, customerID, dishName, specialIngredients=None, specialPrice=None, specialOrder=False):
 
         # Sets instance variables
         self.customerID = customerID
@@ -18,14 +18,18 @@ class Order:
 
         # Checks if special order, if so then uses the ingredients provided
         # If not a special order then it uses the ingredients stored in the Menu database for that dish
+        menuDB = Menu()
+        
         if specialOrder == True:
-            self.ingredients = ingredients
+            self.ingredients = specialIngredients
+            self.price = specialPrice
         else:
-            menuDB = Menu()
             if menuDB.checkIfPresent(dishName) == True:
                 self.ingredients = menuDB.getIngredients(dishName)
             else:
                 print('Dish does not exist')
+
+            self.price = menuDB.getPrice(dishName)
 
     def validateIngredientsAndAddToQueue (self):
 
@@ -69,5 +73,5 @@ class Order:
         menuDB = Menu()
 
         # Adds dish to the Menu database
-        menuDB.addDish(self.dish,self.ingredients)
+        menuDB.addDish(self.dish,self.ingredients,self.price)
 

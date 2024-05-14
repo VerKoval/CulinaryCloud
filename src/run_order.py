@@ -13,14 +13,14 @@ A.printTable()
 
 # Creates Menu database and populates it
 M = Database.Menu()
-M.addDish('Salad',['Lettuce,Tomatoes'])
-M.addDish('Sandwich',['Bread,Lettuce'])
+M.addDish('Salad',['Lettuce,Tomatoes'], 10)
+M.addDish('Sandwich',['Bread,Lettuce'], 15)
 M.printTable()
 
 # Creates orders including one VIP Order
 orderTest1 = Order(123, 'Sandwich')
 orderTest2 = Order(124, 'Salad')
-orderTestVIP = Order(125, 'Special Salad', specialOrder=True, ingredients=['Lettuce','Tomatoes','Chicken'])
+orderTestVIP = Order(125, 'Special Salad', specialOrder=True, specialIngredients=['Lettuce','Tomatoes','Chicken'], specialPrice=30)
 
 # Creates Chefs to make the orders
 chef1 = Chef('John Smith', 50000)
