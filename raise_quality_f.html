@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Raise Quality Issue</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <style>
+       body {
+           text-align: center; /* Align text to center */
+           background-color: #f8f2eb; /* Set background color */
+           display: flex; /* Use flexbox layout */
+           flex-direction: column; /* Stack elements vertically */
+           justify-content: center; /* Center elements vertically */
+           height: 100vh; /* Set height to full viewport height */
+           margin: 0; /* Remove default margin */
+           padding: 0; /* Remove default padding */
+       }
+       h1 {
+           margin-top: 20px; /* Add margin to the top */
+       }
+       form {
+           margin-top: 20px; /* Add margin to the top */
+           display: flex; /* Use flexbox layout */
+           flex-direction: column; /* Stack form elements vertically */
+           align-items: center; /* Align form elements to the center horizontally */
+       }
+       label {
+           margin-bottom: 10px; /* Add margin below each label */
+       }
+       input, textarea, button {
+           margin-bottom: 15px; /* Add margin below each input field */
+           padding: 8px; /* Add padding to input fields */
+           width: 300px; /* Set a fixed width for input fields */
+       }
+       button {
+           width: auto; /* Allow button width to adjust based on content */
+           padding: 10px 20px; /* Add padding to button */
+       }
+   </style>
+</head>
+<body>
+   <h1>Raise Quality Issue</h1>
+
+   <!-- Add the form for raising a quality issue -->
+   <form action="/raise_quality_issue" method="post">
+       <label for="description">Issue Description:</label>
+       <textarea id="description" name="description"></textarea>
+       <label for="reported_by">Reported By:</label>
+       <input type="text" id="reported_by" name="reported_by">
+       <label for="date_reported">Date Reported:</label>
+       <input type="date" id="date_reported" name="date_reported">
+       <button type="submit">Submit Issue</button>
+   </form>
+
+   <!-- More existing HTML content -->
+
+
+   <script>
+       document.getElementById("qualityIssueForm").addEventListener("submit", function(event) {
+           event.preventDefault(); // Prevent the form from submitting normally
+           var issueType = document.getElementById("issueType").value;
+           var severity = document.getElementById("severity").value;
+           var dateCreated = new Date().toISOString().slice(0, 10); // Get the current date in YYYY-MM-DD format
+
+           // Send the data to the server (you would need to implement this part using AJAX or fetch)
+           // For now, we'll just log the data to the console
+           console.log("Issue Type:", issueType);
+           console.log("Severity:", severity);
+           console.log("Date Created:", dateCreated);
+       });
+   </script>
+</body>
+</html>

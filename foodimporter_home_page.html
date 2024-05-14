@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CulinaryCloud</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="top-right">
+        <a href="/logout" class="login-button">Logout</a>
+    </div>
+
+    <div class="centered-content">
+        <h1>CulinaryCloud</h1>
+        <p class="options-text">Options:</p>
+        <ul>
+            <li><a href="/manage_inventory" class="menu-option">Manage inventory</a></li>
+            <li><a href="/raise_quality_f" class="menu-option">Raise quality issue</a></li>
+        </ul>
+    </div>
+    <footer>
+        <p>Copyright © 2024 CulinaryCloud</p>
+    </footer>
+</body>
+</html>
