@@ -13,43 +13,45 @@
         Cart: <span id="cart-count">{{ cart_count }}</span> 
         <a href="/checkout" class="checkout-button">Checkout</a> <!-- Link to the checkout page -->
     </p>
+    <p id="total-price">Total Price: ${{ total_price }}</p>
+    <p>Current Money on Account: ${{ money }}</p>
 </header>
 <main>
     <section id="pizzas">
         <h2 style="font-size: 16px;">Pizza A Legna<span class="rating" style="font-size: 12px;"></span></h2>
         <ul>
-            <li>New Haven - Tomato Sauce, Fresh Mozzarella, Basil, Pecorino - $16.00 <button class="add-to-cart">Add to Cart</button></li>
-            <li>Pizza with Fired Green Tomatoes - Lightly battered, sliced when available, Napoletana style - $20.00 <button class="add-to-cart">Add to Cart</button></li>
+            <li>New Haven - Tomato Sauce, Fresh Mozzarella, Basil, Pecorino - $16.00, rating 1.2 <button class="add-to-cart" data-price="16.00">Add to Cart</button></li>
+            <li>Pizza with Fired Green Tomatoes - Lightly battered, sliced when available, Napoletana style - $20.00, rating 4.4 <button class="add-to-cart" data-price="20.00">Add to Cart</button></li>
             <li>Other Pizzas...</li>
         </ul>
     </section>
     <section id="paninis">
         <h2>Panini / Subs<span class="rating"></span></h2>
         <ul>
-            <li>Italian Cheese Steak - Natural steak, onion, fresh pepper, mozzarella, marinara sauce with squeeze mushroom - $9.50 <button class="add-to-cart">Add to Cart</button></li>
-            <li>Chicken Panini - Shredded chicken with mozzarella served on lightly toasted brown bread and homemade Béchamel sauce - $11.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Italian Cheese Steak - Natural steak, onion, fresh pepper, mozzarella, marinara sauce with squeeze mushroom - $9.50, rating 4.2 <button class="add-to-cart" data-price="9.50">Add to Cart</button></li>
+            <li>Chicken Panini - Shredded chicken with mozzarella served on lightly toasted brown bread and homemade Béchamel sauce - $11.50, rating 4.0 <button class="add-to-cart" data-price="11.50">Add to Cart</button></li>
             <li>Other Paninis...</li>
         </ul>
     </section>
     <section id="insalate">
         <h2>Insalate<span class="rating"></span></h2>
         <ul>
-            <li>Spinach Salad - Apples, local farm's apple cider dressing - $9.50 <button class="add-to-cart">Add to Cart</button></li>
-            <li>Caprese Salad - Ripe tomato with fresh mozzarella and basil - $7.50 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Spinach Salad - Apples, local farm's apple cider dressing - $9.50, rating 3.8 <button class="add-to-cart" data-price="9.50">Add to Cart</button></li>
+            <li>Caprese Salad - Ripe tomato with fresh mozzarella and basil - $7.50, rating 2.1 <button class="add-to-cart" data-price="7.50">Add to Cart</button></li>
             <li>Other Salads...</li>
         </ul>
     </section>
     <section id="specialty">
         <h2>Specialty<span class="rating"></span></h2>
         <ul>
-            <li>Antipasti - Artisanal cheeses, charcuterie, & roasted olives - $13.00 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Antipasti - Artisanal cheeses, charcuterie, & roasted olives - $13.00, rating 4.8 <button class="add-to-cart" data-price="13.00">Add to Cart</button></li>
         </ul>
     </section>
     <section id="drinks">
         <h2>Drinks<span class="rating"></span></h2>
         <ul>
-            <li>Guinness - $6 <button class="add-to-cart">Add to Cart</button></li>
-            <li>Old Fashioned - With NE rye whiskey, bitters, house made vermouth, Campari - $11 <button class="add-to-cart">Add to Cart</button></li>
+            <li>Guinness - $6, rating 4 <button class="add-to-cart" data-price="6.00">Add to Cart</button></li>
+            <li>Old Fashioned - With NE rye whiskey, bitters, house made vermouth, Campari - $11, rating 2 <button class="add-to-cart" data-price="11.00">Add to Cart</button></li>
             <li>Other Drinks...</li>
         </ul>
     </section>
@@ -58,7 +60,7 @@
     <p>log in and place your order!</p>
 </footer>
 
-<p>Cart: <span id="cart-count">{{ cart_count }}</span> <a href="/checkout" class="checkout-button">Checkout</a></p>
+
 <script>
     // Function to generate a random star rating (1 to 5)
     function generateRandomRating() {
@@ -73,15 +75,47 @@
         heading.querySelector('.rating').textContent = stars;
     });
 
+    // Reset total price to 0 each time the page loads
+    localStorage.setItem('totalPrice', '0.00');
+
+    // Set initial cart count to 0
+    document.getElementById('cart-count').textContent = '0';
+
+    // Update total price display
+    document.getElementById('total-price').textContent = `Total Price: $${localStorage.getItem('totalPrice')}`;
+
     // Add event listener to each "Add to Cart" button
     document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', () => {
-            // Get current cart count
-            let cartCountElement = document.getElementById('cart-count');
-            let count = parseInt(cartCountElement.textContent);
-            // Increment cart count
-            cartCountElement.textContent = count + 1;
-        });
+    button.addEventListener('click', () => {
+        // Get current cart count
+        let cartCountElement = document.getElementById('cart-count');
+        let count = parseInt(cartCountElement.textContent);
+        // Increment cart count
+        cartCountElement.textContent = count + 1;
+
+        // Get price of the item
+        let price = parseFloat(button.getAttribute('data-price'));
+
+        // Get total price from localStorage
+        let totalPrice = parseFloat(localStorage.getItem('totalPrice'));
+
+        // Add the price of the item to the total price
+        totalPrice += price;
+
+        // Update total price in localStorage
+        localStorage.setItem('totalPrice', totalPrice.toFixed(2));
+
+        // Update total price display
+        document.getElementById('total-price').textContent = `Total Price: $${localStorage.getItem('totalPrice')}`;
+
+        // Pass the updated total price to Checkout.html using localStorage
+        localStorage.setItem('cartPrice', totalPrice.toFixed(2));
+    });
+});
+// Add event listener to checkout button
+document.querySelector('.checkout-button').addEventListener('click', () => {
+        // Redirect to checkout page
+        window.location.href = '/checkout?total_price=' + localStorage.getItem('totalPrice');
     });
 </script>
 
