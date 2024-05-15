@@ -32,14 +32,23 @@ Usage:
 The system is designed to streamline restaurant operations and enhance customer experience. Users can interact with the system through the intuitive graphical user interface (GUI), making it easy to navigate and utilize its functionalities.
 
 
-
-
-
+## Setup Instructions
 
 To download and set up our app, follow these steps:
-Use ‘git clone’ to from out github repository: https://github.com/VerKoval/CulinaryCloud/tree/main
-Install python packages : pip install -r requirements.txt
-All other dependencies: npm install, composer install
-To get to our website run in terminal: python app.py 
- 
-Once you're in our app, you'll enter Surfer Mode by default. You can access other functionalities when registered where you'll choose a role that best suits you. Based on the role you select, you'll be directed to your personalized page where you can access all the different functionalities tailored to your role.
+
+1. Use `git clone` to clone our GitHub repository:
+git clone https://github.com/VerKoval/CulinaryCloud.git
+
+2. Install Python packages:
+pip install -r requirements.txt
+
+3. Install other dependencies:
+npm install
+composer install
+
+4. To run our website, execute the following command in your terminal:
+python app.py
+
+## Usage
+
+Once you're in our app, you'll enter Surfer Mode by default. You can access other functionalities after registering, where you'll choose a role that best suits you. Based on the role you select, you'll be directed to your personalized page, where you can access all the different functionalities tailored to your role.
