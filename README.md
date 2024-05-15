@@ -33,6 +33,9 @@ The system is designed to streamline restaurant operations and enhance customer 
 
 
 
+
+
+
 To download and set up our app, follow these steps:
 Use ‘git clone’ to from out github repository: https://github.com/VerKoval/CulinaryCloud/tree/main
 Install python packages : pip install -r requirements.txt
