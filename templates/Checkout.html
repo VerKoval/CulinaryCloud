@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Order Options</title>
+    <title>CulinaryCloud Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}"> <!-- Link to your CSS file for styling -->
 </head>
 <body>
     <h1>Order Options</h1>
@@ -18,23 +19,37 @@
 
     <p id="price-info"></p>
 
-    <button id="done-button">Done?</button>
+    <a href="/feedback" class="feedback-button">Done?</a> <!-- Link to the checkout page -->
     
-    <p>Price is $35</p>
+    <!-- Display total price here -->
+    <!--//><p id="total_price"></p>-->
 
     <script>
         const doneButton = document.getElementById('done-button');
-    
+        const totalPriceElement = document.getElementById('total_price');
+
+        // Function to extract query parameters from URL
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+            }
+
+        // Extract total price from query parameter
+        const totalPrice = getQueryParam('total_price');
+
+        // Display total price
+        totalPriceElement.textContent = 'Total Price: $' + totalPrice;
+
         doneButton.addEventListener('click', async () => {
             try {
                 const response = await fetch('/checkout', {
                     method: 'POST'
                 });
-    
+
                 if (response.ok) {
                     console.log('Checkout successful');
-                    // Redirect to the customer home page
-                    window.location.href = '/customer_home_page'; 
+                    // Open a new HTML page named "feedback"
+                    window.open('feedback.html', '_blank');
                 } else {
                     console.error('Error during checkout:', response.statusText);
                 }
@@ -43,5 +58,35 @@
             }
         });
     </script>
+
+<h1>Add Money to Account</h1>
+<label for="amount">Enter Amount:</label>
+<input type="number" id="amount" name="amount" min="0" step="0.01">
+<button id="add-button">Add</button>
+<p id="message"></p>
+
+<script>
+    const addButton = document.getElementById('add-button');
+    const amountInput = document.getElementById('amount');
+    const messageElement = document.getElementById('message');
+
+    addButton.addEventListener('click', () => {
+        const amount = parseFloat(amountInput.value);
+
+        if (isNaN(amount) || amount <= 0) {
+            messageElement.textContent = 'Please enter a valid amount.';
+        } else {
+            // Here you can perform the logic to add the amount to the account
+            // For demonstration purposes, let's just display a message
+            messageElement.textContent = `Successfully added $${amount.toFixed(2)} to the account.`;
+        }
+    });
+
+    // Add event listener to checkout button
+document.querySelector('.feedback-button').addEventListener('click', () => {
+        // Redirect to checkout page
+        window.location.href = '/feedback';
+    });
+</script>
 </body>
 </html>

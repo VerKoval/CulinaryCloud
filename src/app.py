@@ -81,7 +81,7 @@ def add_item_to_cart():
         # Get number of items in the cart
         cart_count = cust.numCart()
         
-        return render_template('customer_home_page.html', cart_count=cart_count)
+        return render_template('customer_home_page.html', money = cust.money)
     except Exception as e:
         return str(e), 500
 
@@ -89,7 +89,7 @@ def add_item_to_cart():
 @app.route('/customer_home_page')
 def customer_home_page():
     # This will render a generic customer home page
-    return render_template('customer_home_page.html', cart_count=cust.numCart())
+    return render_template('customer_home_page.html', money=cust.money)
 
 @app.route('/chef_home_page')
 def chef_home_page():
@@ -287,9 +287,11 @@ def checkout():
     # Call Customer checkout function
     cust.checkout()  # Assuming 'cust' is an instance of the Customer class
 
-    price = cust.cartPrices()
+    # Get the total price of items in the cart
+    total_price = cust.cartPrices()
+
     # Optionally, you can return a response indicating success
-    return render_template('Checkout.html', price = price)
+    return render_template('Checkout.html', total_price=total_price)
 
 @app.route('/surfer_menu_page')
 def surfer_menu():
@@ -326,6 +328,10 @@ def handle_quality_issue():
     user_manager.add_quality_issue(description, reported_by, date_reported)
 
     return redirect(url_for('foodimporter_home_page'))
+
+@app.route('/feedback')
+def feedback():#customer feedback
+    return render_template('feedback.html')
 
 @app.route('/manage_staff')
 def manage_staff():

@@ -41,7 +41,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
         connection = mysql.connector.connect(
             host=host_name,
             user=user_name,
-            password=user_password,
+            password='CSC322WEI',
             database=db_name
         )
         print("MySQL Database connection successful")
@@ -51,7 +51,7 @@ def create_server_connection(host_name, user_name, user_password, db_name=None):
     return connection
 
 class Database:
-    password = 'CC14052024'
+    password = 'CSC322WEI'
 
     connection = create_server_connection("localhost", "root", password)
     database = create_database(connection, 'CulinaryCloud')
@@ -456,10 +456,10 @@ class Customers (Database):
         self.execute_query(CreateTableCustomerString)
         
 # Add Customer using their first name, last name, email, password, and birthday
-    def addCustomer (self, first_name, last_name, email, password_hash, birthday):
+    def addCustomer (self, first_name, last_name, email, password_hash, birthday, money = 0, paymentInfo = 0, vip = False, warnings=0, orders=0):
         
         AddCustomer = f"""INSERT INTO Customers (first_name, last_name, money, paymentInfo, vip, warnings, orders, email, password, birthday) VALUES 
-                        ('{first_name}', '{last_name}', 0, 0, 0, 0, 0, '{email}', '{password_hash}', '{birthday}');"""
+                        ('{first_name}', '{last_name}', {money}, {paymentInfo}, {vip}, {warnings}, {orders}, '{email}', '{password_hash}', '{birthday}');"""
 
         self.execute_query(AddCustomer)
         print("Customer Added")
@@ -555,6 +555,40 @@ class Customers (Database):
             return False
         else:
             return True
+        
+    def getInfo(self, id):
+        find = f"""
+            SELECT id, first_name, last_name, money, paymentInfo, vip, warnings, orders
+            FROM Customers
+            WHERE id = {id};
+            """
+        found = self.execute_query(find, returnFlag=True)
+    
+        # Assuming `found` is a single row result
+        if found:
+            id, first_name, last_name, money, paymentInfo, vip, warnings, orders = found[0]
+        # Convert data types as needed
+            id = int(id)
+            money = int(money)
+            vip = bool(vip)
+            warnings = int(warnings)
+            orders = int(orders)
+        # Return as a tuple
+            return id, first_name, last_name, money, paymentInfo, vip, warnings, orders
+        else:
+            return None
+    
+    def printTable (self):
+
+        cursor = Database.connection.cursor(buffered=True)
+        cursor.execute("SELECT * FROM Customers") 
+
+        # fetch all the matching rows 
+        result = cursor.fetchall() 
+  
+        # loop through the rows 
+        for row in result: 
+            print(row, '\n') 
 
 
 def execute_query(self, query):
