@@ -22,10 +22,9 @@ class Customer:
         self.VIP = vip
         self.warnings = warn
         self.orders = orders
-        print("YASSSSSSS", self.warnings)
+
         #if two warnings, delete customer
         if self.warnings >= 2:
-            print("YADD")
             if not self.VIP:
                 Customer.remove()
             else:
